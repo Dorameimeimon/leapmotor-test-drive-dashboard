@@ -455,14 +455,22 @@ const MAX_TARGET_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / (d.staff
 // 工具函数
 // ============================================================
 
-/** 根据排名/数值返回背景色class（前N绿，后N红）*/
-function getRankBgClass(rank, total) {
-  if (rank === null || rank === undefined) return "";
-  // 1-6名偏绿，7-12名偏红
-  if (rank <= 3) return "bg-green-deep";
-  if (rank <= 6) return "bg-green-med";
-  if (rank <= 9) return "bg-red-light";
-  return "bg-red-med";
+/** 综合排名连续渐变着色：1-6名绿系（1名最深→6名最浅），7-12名红系（7名最浅→12名最深），每人一色 */
+function buildRankColorMap() {
+  const map = {};
+  const green = [1,2,3,4,5,6];
+  const red   = [7,8,9,10,11,12];
+  green.forEach((r, i) => {           // 1名=最深绿，6名=最浅绿
+    const t = green.length > 1 ? i / (green.length - 1) : 0;
+    const bg = lerpColor(CG_DEEP, CG_LIGHT, t);
+    map[r] = { bg, txt: textOn(bg) };
+  });
+  red.forEach((r, i) => {             // 7名=最浅红，12名=最深红
+    const t = red.length > 1 ? (red.length - 1 - i) / (red.length - 1) : 0;
+    const bg = lerpColor(CR_DEEP, CR_LIGHT, t);
+    map[r] = { bg, txt: textOn(bg) };
+  });
+  return map;
 }
 
 /** 连续渐变着色：12小区以华南为界，每人一色
@@ -568,6 +576,7 @@ function renderMainTable() {
   // 连续渐变底色：12小区以华南为界，高于华南绿系（越大越深绿）、低于华南红系（越小越深红），每人一色
   const trialColorMap = buildContinuousMap(MANAGER_DATA.map(d => ({ k: d.manager, v: rawRateOf(d) })), southTrialRate);
   const targetColorMap = buildContinuousMap(MANAGER_DATA.map(d => ({ k: d.manager, v: targetRateOf(d) })), southTargetRate);
+  const rankColorMap = buildRankColorMap();
 
   sortedMgrs.forEach(d => {
     const tc = trialColorMap[d.manager] || { bg: "#eeeeee", txt: "#333" };
@@ -582,7 +591,7 @@ function renderMainTable() {
       <td class="num-cell heat-cell"><span style="background:${gc.bg};color:${gc.txt}">${d.targetRate.toFixed(2)}%</span></td>
       <td class="num-cell">${fmt(d.targetScore, 2)}</td>
       <td class="num-cell">${fmt(d.totalScore, 2)}</td>
-      <td class="num-cell ${getRankBgClass(d.rank, total)}"><span>${d.rank}</span></td>
+      <td class="num-cell heat-cell"><span style="background:${rankColorMap[d.rank].bg};color:${rankColorMap[d.rank].txt}">${d.rank}</span></td>
     </tr>`;
   });
 
