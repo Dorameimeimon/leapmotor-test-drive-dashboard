@@ -105,7 +105,7 @@
   }
   tbody tr.summary-row:hover { background: #c8e6c9 !important; }
   tbody tr.note-row td {
-    background: #f7f7f7;
+    background: #fff;
     color: #888;
     font-size: 12px;
     text-align: left;
@@ -470,8 +470,8 @@ function getRankBgClass(rank, total) {
  *  低于华南：红系，数值最小→最深红，最接近华南（最大低于值）→最浅红
  *  返回 { key: { bg, txt } }，key 为经理名
  */
-const CG_DEEP = [26, 145, 85];     // 翠绿 #1e9155（最大值最深）
-const CG_LIGHT = [162, 228, 195];  // 浅薄荷绿 #a2e4c3（最接近华南最浅）
+const CG_DEEP = [70, 185, 125];    // 嫩绿 #46b97d（最大值最深，整体偏嫩）
+const CG_LIGHT = [205, 240, 218];  // 浅嫩绿 #cdf0da（最接近华南最浅）
 const CR_DEEP = [255, 125, 75];    // 珊瑚橙 #ff7d4b（最小值最深）
 const CR_LIGHT = [255, 222, 208];  // 浅蜜桃 #ffded0（最接近华南最浅）
 
@@ -592,9 +592,9 @@ function renderMainTable() {
     <td class="num-cell">${fmtInt(SUMMARY_ROW.staffReq)}</td>
     <td class="num-cell">${fmtInt(SUMMARY_ROW.potential)}</td>
     <td class="num-cell">${fmtInt(SUMMARY_ROW.testDrive)}</td>
-    <td class="num-cell heat-neutral"><span>${SUMMARY_ROW.trialRate.toFixed(2)}%</span></td>
+    <td class="num-cell"><span>${SUMMARY_ROW.trialRate.toFixed(2)}%</span></td>
     <td class="num-cell">${fmt(SUMMARY_ROW.trialScore, 2)}</td>
-    <td class="num-cell heat-neutral"><span>${SUMMARY_ROW.targetRate.toFixed(2)}%</span></td>
+    <td class="num-cell"><span>${SUMMARY_ROW.targetRate.toFixed(2)}%</span></td>
     <td class="num-cell">${fmt(SUMMARY_ROW.targetScore, 2)}</td>
     <td class="num-cell">${fmt(SUMMARY_ROW.totalScore, 2)}</td>
     <td class="num-cell">-</td>
