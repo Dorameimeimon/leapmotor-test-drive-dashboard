@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>试驾勤奋度看板</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f6fa;
+    color: #333;
+    padding: 20px;
+    font-size: 13px;
+  }
+
+  /* ===== 主容器 ===== */
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  /* ===== 表格卡片容器（白底圆角阴影，参考CFT样式）===== */
+  .table-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+    padding: 4px 0;
+  }
+
+  /* ===== 标题区 ===== */
+  .header {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: 4px;
+  }
+  .time-row {
+    width: 1080px;
+    margin: 0 auto 8px auto;
+    font-size: 13px;
+    color: #555;
+  }
+  .header h1 .dash-date {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c7a3a;
+    margin-left: 16px;
+    letter-spacing: 0;
+  }
+  .time-label { font-weight: 600; color: #333; }
+  .time-value { color: #2c7a3a; font-weight: 600; }
+
+  /* ===== 表格通用（无边框、斑马纹，参考CFT样式）===== */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+    font-size: 13px;
+  }
+  th, td {
+    border: none;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  th {
+    background: #1b4332;
+    color: #fff;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+  th.col-manager { min-width: 90px; }
+  th.col-pct { min-width: 80px; }
+  th.col-score { min-width: 70px; }
+  th.col-rank { min-width: 60px; }
+
+  /* ===== 主表：列宽统一收窄（仅主表，不影响下方门店表）===== */
+  #mainTable {
+    table-layout: fixed;
+    width: 1080px;
+    margin: 0 auto;
+  }
+  #mainTable th, #mainTable td {
+    width: 108px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ===== 数据行：无框线 + 斑马纹 ===== */
+  tbody tr:nth-child(even) { background: #f7f8fa; }
+  tbody tr:nth-child(odd) { background: #fff; }
+  tbody tr:hover { background: #f0f4f0; }
+  tbody tr.summary-row {
+    background: #e8f5e9 !important;
+    font-weight: 700;
+  }
+  tbody tr.summary-row:hover { background: #c8e6c9 !important; }
+  tbody tr.note-row td {
+    background: #f7f7f7;
+    color: #888;
+    font-size: 12px;
+    text-align: left;
+    padding: 4px 8px;
+    border-top: 1px solid #eee;
+  }
+
+  /* ===== 热力图标色（分档色块：越大越绿、越小越红，圆角药丸）===== */
+  td.num-cell.heat-1, td.num-cell.heat-2, td.num-cell.heat-3,
+  td.num-cell.heat-4, td.num-cell.heat-5, td.num-cell.heat-6, td.num-cell.heat-7 {
+    text-align: center !important;
+    vertical-align: middle;
+  }
+  td.num-cell.heat-1 > span { background-color:#2e7d32; color:#fff; font-weight:700; }
+  td.num-cell.heat-2 > span { background-color:#66bb6a; color:#1b5e20; font-weight:600; }
+  td.num-cell.heat-3 > span { background-color:#a5d6a7; color:#1b5e20; font-weight:600; }
+  td.num-cell.heat-4 > span { background-color:#c8e6c9; color:#333; }
+  td.num-cell.heat-5 > span { background-color:#ffccbc; color:#bf360c; }
+  td.num-cell.heat-6 > span { background-color:#ff8a65; color:#fff; font-weight:700; }
+  td.num-cell.heat-7 > span { background-color:#e64a19; color:#fff; font-weight:700; }
+  td.num-cell.heat-1 > span, td.num-cell.heat-2 > span, td.num-cell.heat-3 > span,
+  td.num-cell.heat-4 > span, td.num-cell.heat-5 > span, td.num-cell.heat-6 > span, td.num-cell.heat-7 > span {
+    display:inline-block; min-width:56px; padding:2px 10px; border-radius:12px; line-height:1.6;
+  }
+
+  /* 数字等宽字体 */
+  td.num-cell { font-variant-numeric: tabular-nums; }
+
+  /* ===== 试驾目标完成率 / 综合排名（分档色块：越大越绿、越小越红）===== */
+  td.num-cell.bg-green-deep, td.num-cell.bg-green-med, td.num-cell.bg-green-light,
+  td.num-cell.bg-neutral, td.num-cell.bg-red-light, td.num-cell.bg-red-med, td.num-cell.bg-red-deep {
+    text-align: center !important;
+    vertical-align: middle;
+  }
+  td.num-cell.bg-green-deep > span { background-color:#2e7d32; color:#fff; font-weight:700; }
+  td.num-cell.bg-green-med  > span { background-color:#66bb6a; color:#1b5e20; font-weight:600; }
+  td.num-cell.bg-green-light> span { background-color:#a5d6a7; color:#1b5e20; font-weight:600; }
+  td.num-cell.bg-neutral   > span { background-color:#c8e6c9; color:#333; }
+  td.num-cell.bg-red-light > span { background-color:#ffccbc; color:#bf360c; }
+  td.num-cell.bg-red-med   > span { background-color:#ff8a65; color:#fff; font-weight:700; }
+  td.num-cell.bg-red-deep  > span { background-color:#e64a19; color:#fff; font-weight:700; }
+  td.num-cell.bg-green-deep > span, td.num-cell.bg-green-med > span, td.num-cell.bg-green-light > span,
+  td.num-cell.bg-neutral > span, td.num-cell.bg-red-light > span, td.num-cell.bg-red-med > span, td.num-cell.bg-red-deep > span {
+    display:inline-block; min-width:56px; padding:2px 10px; border-radius:12px; line-height:1.6;
+  }
+
+  /* ===== 子片区区域 ===== */
+  .sub-section {
+    margin-top: 24px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .sub-header {
+    background: #1b4332;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* 子表格工具栏 */
+  .sub-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #f8fafb;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+  }
+  .sub-toolbar label { font-weight: 600; color: #333; }
+  .sub-toolbar select {
+    padding: 5px 10px;
+    border: 1px solid #c8d6cf;
+    border-radius: 5px;
+    background: #fff;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+    min-width: 140px;
+  }
+  .sub-toolbar select:hover { border-color: #40916c; }
+
+  /* 子表格样式（无边框，与主表一致） */
+  .sub-table-wrap { padding: 12px; overflow-x: auto; }
+  .sub-table-wrap table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .sub-table-wrap table th, .sub-table-wrap table td {
+    border: none;
+  }
+  .sub-table-wrap table th {
+    background: #1b4332;
+    color: #fff;
+    font-size: 13px;
+    padding: 10px 6px;
+    font-weight: 600;
+  }
+  .sub-table-wrap table td {
+    font-size: 13px;
+    padding: 10px 8px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .sub-table-wrap table tbody tr:nth-child(even) { background: #f7f8fa; }
+  .sub-table-wrap table tbody tr:nth-child(odd) { background: #fff; }
+
+  /* 经理分组标签 */
+  .group-tag {
+    display: inline-block;
+    background: #d4edda;
+    color: #155724;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  /* 响应式 */
+  @media (max-width: 1200px) {
+    body { padding: 10px; font-size: 13px; }
+    th, td { padding: 5px 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ==================== 标题 ==================== -->
+<div class="header">
+  <h1>试驾勤奋度看板<span class="dash-date" id="dashDate"></span></h1>
+</div>
+<div class="time-row">
+  <span><span class="time-label">时间维度：</span><span class="time-value">周度（8.1–8.9）</span></span>
+</div>
+
+<!-- ==================== 主表：零售高级经理维度 ==================== -->
+<div class="table-card">
+<table id="mainTable">
+  <thead>
+    <tr>
+      <th class="col-manager">零售高级经理</th>
+      <th>体验工程师及<br>主管人数要求</th>
+      <th>门店有效<br>潜客数</th>
+      <th>试驾量</th>
+      <th class="col-pct">潜客试驾率</th>
+      <th class="col-score">潜客试驾率<br>得分</th>
+      <th class="col-pct">试驾目标<br>完成率</th>
+      <th class="col-score">试驾目标<br>完成率得分</th>
+      <th class="col-score">综合得分</th>
+      <th class="col-rank">综合排名</th>
+    </tr>
+  </thead>
+  <tbody id="mainBody"></tbody>
+</table>
+</div>
+
+<!-- ==================== 子片区：门店明细 ==================== -->
+<div class="sub-section">
+  <div class="sub-header">
+    <span>📋 门店明细</span>
+  </div>
+  <div class="sub-content" id="subContent">
+    <div class="sub-toolbar">
+      <label>零售经理：</label>
+      <select id="managerFilter" onchange="filterStores()">
+        <option value="">全部</option>
+      </select>
+      <span id="storeCount" style="font-size:13px;color:#888;"></span>
+    </div>
+    <div class="sub-table-wrap">
+      <table id="storeTable">
+        <thead><tr>
+          <th>门店名称</th>
+          <th>零售高级经理</th>
+          <th>集团</th>
+          <th>门店类型</th>
+          <th>体验工程师及<br>主管人数要求</th>
+          <th>门店有效<br>潜客数</th>
+          <th>试驾量</th>
+          <th>潜客试驾率</th>
+          <th class="col-score">潜客试驾率<br>得分</th>
+          <th class="col-pct">试驾目标<br>完成率</th>
+          <th class="col-score">试驾目标<br>完成率得分</th>
+          <th class="col-score">综合<br>得分</th>
+        </tr></thead>
+        <tbody id="storeBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.container -->
+
+<script>
+// ============================================================
+// 数据定义
+// ============================================================
+
+// ---- 门店明细数据（用户提供的93家门店）----
+const STORE_DATA = [
+  { store: "东莞零跑中心寮步车城店", manager: "方任昊", group: "东富", type: "零跑中心", staffReq: 16, potential: 286, drive: 64 },
+  { store: "东莞零跑中心常朗路店", manager: "方任昊", group: "东朋", type: "零跑中心", staffReq: 14, potential: 337, drive: 26 },
+  { store: "东莞体验中心东城店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 6, potential: 272, drive: 18 },
+  { store: "东莞体验中心石排大道店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 9, potential: 127, drive: 14 },
+  { store: "东莞体验中心松山湖店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 8, potential: 207, drive: 8 },
+  { store: "东莞零跑中心虎门车城店", manager: "方任昊", group: "华跃", type: "零跑中心", staffReq: 12, potential: 252, drive: 21 },
+  { store: "东莞零跑中心莞太路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 15, potential: 295, drive: 48 },
+  { store: "东莞零跑中心长安振安东路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 9, potential: 106, drive: 16 },
+  { store: "东莞体验中心大岭山镇店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 6, potential: 162, drive: 14 },
+  { store: "东莞体验中心厚街店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 8, potential: 158, drive: 19 },
+  { store: "韶关零跑中心沐溪大道店", manager: "胡浩", group: "利泰", type: "零跑中心", staffReq: 10, potential: 159, drive: 25 },
+  { store: "韶关体验中心浈江大道店", manager: "胡浩", group: "利泰", type: "城市展厅", staffReq: 9, potential: 186, drive: 20 },
+  { store: "惠州零跑中心金山汽车城店", manager: "胡浩", group: "新零致", type: "零跑中心", staffReq: 20, potential: 351, drive: 72 },
+  { store: "惠州体验中心惠阳大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 8, potential: 202, drive: 15 },
+  { store: "汕尾体验中心汕尾大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 9, potential: 184, drive: 22 },
+  { store: "惠州零跑中心惠南汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 18, potential: 401, drive: 60 },
+  { store: "惠州零跑中心仲恺汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 10, potential: 208, drive: 34 },
+  { store: "惠州体验中心河南岸车城店", manager: "胡浩", group: "一维", type: "城市展厅", staffReq: 8, potential: 331, drive: 32 },
+  { store: "广州零跑中心科学城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 15, potential: 455, drive: 52 },
+  { store: "广州零跑中心新塘汽车城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 16, potential: 573, drive: 54 },
+  { store: "广州体验中心白云机场路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 335, drive: 31 },
+  { store: "广州体验中心番禺大道店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 16, potential: 465, drive: 37 },
+  { store: "广州体验中心天河广汕路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 321, drive: 35 },
+  { store: "广州体验中心天河汇彩路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 365, drive: 37 },
+  { store: "广州零跑中心沥滘海心沙店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 14, potential: 231, drive: 43 },
+  { store: "广州零跑中心美轮汽车园店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 10, potential: 213, drive: 21 },
+  { store: "广州零跑中心亚运大道店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 15, potential: 328, drive: 33 },
+  { store: "广州零跑中心金马汽车城店", manager: "黄伟峰", group: "沃之瑞", type: "零跑中心", staffReq: 11, potential: 388, drive: 26 },
+  { store: "深圳零跑中心芙蓉路店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 12, potential: 263, drive: 26 },
+  { store: "深圳零跑中心南山嘉进隆店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 16, potential: 380, drive: 66 },
+  { store: "深圳体验中心福田瑞鹏达店", manager: "贾迪赫", group: "标特", type: "城市展厅", staffReq: 9, potential: 161, drive: 40 },
+  { store: "深圳零跑中心百世汽车城店", manager: "贾迪赫", group: "九兴", type: "零跑中心", staffReq: 15, potential: 239, drive: 42 },
+  { store: "深圳体验中心锦龙大道店", manager: "贾迪赫", group: "九兴", type: "城市展厅", staffReq: 7, potential: 191, drive: 12 },
+  { store: "深圳体验中心龙岗信义店", manager: "贾迪赫", group: "九兴", type: "城市展厅", staffReq: 10, potential: 151, drive: 24 },
+  { store: "三亚零跑中心榆亚路店", manager: "李博恩", group: "合群", type: "零跑中心", staffReq: 11, potential: 91, drive: 20 },
+  { store: "三亚体验中心迎宾路汽车城店", manager: "李博恩", group: "合群", type: "城市展厅", staffReq: 11, potential: 147, drive: 17 },
+  { store: "海口零跑中心美安科技城店", manager: "李博恩", group: "铧丰", type: "零跑中心", staffReq: 10, potential: 163, drive: 38 },
+  { store: "海口体验中心上邦百汇城店", manager: "李博恩", group: "铧丰", type: "商超", staffReq: 8, potential: 138, drive: 28 },
+  { store: "海口零跑中心海盛路店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 8, potential: 148, drive: 15 },
+  { store: "海口零跑中心南海大道店（销售）", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 17, potential: 345, drive: 65 },
+  { store: "海口零跑中心南海大道东店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 17, potential: 422, drive: 61 },
+  { store: "海口体验中心海甸城店", manager: "李博恩", group: "九兴", type: "商超", staffReq: 10, potential: 125, drive: 23 },
+  { store: "海口体验中心海口东站店", manager: "李博恩", group: "九兴", type: "城市展厅", staffReq: 8, potential: 214, drive: 25 },
+  { store: "海口零跑中心琼山大道店", manager: "李博恩", group: "正大", type: "零跑中心", staffReq: 14, potential: 306, drive: 47 },
+  { store: "海口体验中心江东店", manager: "李博恩", group: "正大", type: "城市展厅", staffReq: 12, potential: 247, drive: 36 },
+  { store: "梅州零跑中心剑英大道店", manager: "李稳", group: "骏诚", type: "零跑中心", staffReq: 9, potential: 134, drive: 31 },
+  { store: "云浮体验中心环市中路店", manager: "李稳", group: "利生", type: "城市展厅", staffReq: 9, potential: 149, drive: 15 },
+  { store: "潮州零跑中心潮汕路店", manager: "李稳", group: "荣通", type: "零跑中心", staffReq: 10, potential: 207, drive: 15 },
+  { store: "揭阳零跑中心荣通汽车城店", manager: "李稳", group: "荣通", type: "零跑中心", staffReq: 10, potential: 308, drive: 37 },
+  { store: "揭阳体验中心普宁万泰新天地商场店", manager: "李稳", group: "荣通", type: "商超", staffReq: 6, potential: 194, drive: 29 },
+  { store: "深圳零跑中心宝运达汽车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 16, potential: 423, drive: 47 },
+  { store: "深圳零跑中心光明车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 14, potential: 469, drive: 53 },
+  { store: "深圳零跑中心万国城旗舰店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 12, potential: 330, drive: 38 },
+  { store: "深圳零跑中心远望车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 14, potential: 390, drive: 32 },
+  { store: "深圳体验中心杰鹏车城店", manager: "罗捷", group: "新易腾", type: "城市展厅", staffReq: 8, potential: 226, drive: 26 },
+  { store: "深圳体验中心龙华中心店", manager: "罗捷", group: "新易腾", type: "城市展厅", staffReq: 10, potential: 395, drive: 31 },
+  { store: "珠海零跑中心南屏珠海大道店", manager: "秦启超", group: "达田", type: "零跑中心", staffReq: 12, potential: 227, drive: 27 },
+  { store: "珠海体验中心美满车城店", manager: "秦启超", group: "达田", type: "城市展厅", staffReq: 9, potential: 277, drive: 31 },
+  { store: "中山零跑中心金宁汽车城店", manager: "秦启超", group: "金盈", type: "零跑中心", staffReq: 9, potential: 209, drive: 14 },
+  { store: "中山零跑中心彩虹大道店", manager: "秦启超", group: "美轮", type: "零跑中心", staffReq: 13, potential: 293, drive: 39 },
+  { store: "中山零跑中心中山六路店", manager: "秦启超", group: "美轮", type: "零跑中心", staffReq: 8, potential: 205, drive: 33 },
+  { store: "中山体验中心港口店", manager: "秦启超", group: "美轮", type: "城市展厅", staffReq: 8, potential: 174, drive: 17 },
+  { store: "珠海零跑中心上冲车城店", manager: "秦启超", group: "申裕", type: "零跑中心", staffReq: 14, potential: 303, drive: 88 },
+  { store: "珠海体验中心西部车城店", manager: "秦启超", group: "申裕", type: "城市展厅", staffReq: 9, potential: 213, drive: 31 },
+  { store: "中山零跑中心小榄菊城大道店", manager: "秦启超", group: "智盈", type: "零跑中心", staffReq: 13, potential: 248, drive: 39 },
+  { store: "广州零跑中心白云大道店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 13, potential: 303, drive: 24 },
+  { store: "广州零跑中心花都建设路店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 12, potential: 383, drive: 34 },
+  { store: "广州体验中心广花路店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 6, potential: 188, drive: 11 },
+  { store: "广州体验中心花都北站店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 127, drive: 9 },
+  { store: "广州体验中心为正车城店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 188, drive: 28 },
+  { store: "河源零跑中心河源大道店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 12, potential: 149, drive: 38 },
+  { store: "河源体验中心坚基购物中心店", manager: "熊俊晖", group: "骏延", type: "商超", staffReq: 6, potential: 134, drive: 4 },
+  { store: "清远零跑中心港鸿汽车城店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 10, potential: 207, drive: 30 },
+  { store: "清远体验中心奇晟汽车城店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 152, drive: 23 },
+  { store: "汕头零跑中心汕汾路店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 13, potential: 342, drive: 61 },
+  { store: "汕头零跑中心金凤路店", manager: "熊俊晖", group: "亿海", type: "零跑中心", staffReq: 11, potential: 196, drive: 13 },
+  { store: "汕头体验中心广汕路店", manager: "熊俊晖", group: "亿海", type: "城市展厅", staffReq: 6, potential: 118, drive: 26 },
+  { store: "江门零跑中心建设路店", manager: "余子恩", group: "磐鼎", type: "零跑中心", staffReq: 12, potential: 175, drive: 29 },
+  { store: "佛山零跑中心顺德大良车城店", manager: "余子恩", group: "未来智选", type: "零跑中心", staffReq: 18, potential: 503, drive: 52 },
+  { store: "佛山体验中心北滘车城店", manager: "余子恩", group: "未来智选", type: "城市展厅", staffReq: 8, potential: 237, drive: 20 },
+  { store: "佛山体验中心容桂车城店", manager: "余子恩", group: "未来智选", type: "城市展厅", staffReq: 8, potential: 200, drive: 15 },
+  { store: "佛山零跑中心三水友好车城店", manager: "余子恩", group: "智迅", type: "零跑中心", staffReq: 17, potential: 441, drive: 41 },
+  { store: "佛山体验中心高明荷香路店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 5, potential: 131, drive: 24 },
+  { store: "佛山体验中心狮山汽车城店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 7, potential: 117, drive: 7 },
+  { store: "江门零跑中心冈州大道店", manager: "余子恩", group: "智迅", type: "零跑中心", staffReq: 15, potential: 256, drive: 40 },
+  { store: "江门体验中心开平车城店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 8, potential: 149, drive: 23 },
+  { store: "江门体验中心蓬江华鸿店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 4, potential: 130, drive: 5 },
+  { store: "佛山零跑中心海八路汽车城店", manager: "余子恩(代)", group: "华跃", type: "零跑中心", staffReq: 16, potential: 284, drive: 21 },
+  { store: "佛山体验中心广佛汽车城店", manager: "余子恩(代)", group: "华跃", type: "城市展厅", staffReq: 6, potential: 193, drive: 3 },
+  { store: "佛山体验中心海八西路店", manager: "余子恩(代)", group: "华跃", type: "城市展厅", staffReq: 8, potential: 227, drive: 37 },
+  { store: "佛山零跑中心禅城国际汽车城店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 16, potential: 394, drive: 40 },
+  { store: "佛山零跑中心桂澜路店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 8, potential: 229, drive: 2 },
+  { store: "佛山零跑中心南庄汽车城店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 13, potential: 321, drive: 15 },
+  { store: "茂名零跑中心茂名大道店", manager: "庄文迪", group: "美轮", type: "零跑中心", staffReq: 13, potential: 252, drive: 32 },
+  { store: "茂名体验中心茂水路店", manager: "庄文迪", group: "美轮", type: "城市展厅", staffReq: 5, potential: 145, drive: 19 },
+  { store: "肇庆零跑中心肇庆大道店", manager: "庄文迪", group: "美轮", type: "零跑中心", staffReq: 13, potential: 344, drive: 47 },
+  { store: "阳江零跑中心溢信汽车城店", manager: "庄文迪", group: "溢信", type: "零跑中心", staffReq: 10, potential: 196, drive: 21 },
+  { store: "湛江零跑中心海田车城店", manager: "庄文迪", group: "源流", type: "零跑中心", staffReq: 13, potential: 406, drive: 26 },
+  { store: "湛江体验中心瀚龙车城店", manager: "庄文迪", group: "源流", type: "城市展厅", staffReq: 6, potential: 205, drive: 18 },
+  { store: "湛江体验中心粤西车城店", manager: "庄文迪", group: "源流", type: "城市展厅", staffReq: 6, potential: 183, drive: 19 },
+];
+
+// ---- 主表数据：按零售高级经理聚合（示例数据，匹配截图）----
+const MANAGER_DATA = [
+  { manager: "方任昊", staffReq: 103, potential: 2202, testDrive: 248, trialRate: 11.26, trialScore: 70.46, targetRate: 26.80, targetScore: 71.70, totalScore: 71.08, rank: 11 },
+  { manager: "胡浩", staffReq: 92, potential: 2022, testDrive: 280, trialRate: 13.85, trialScore: 86.63, targetRate: 33.80, targetScore: 90.64, totalScore: 88.63, rank: 4 },
+  { manager: "黄伟峰", staffReq: 136, potential: 3674, testDrive: 369, trialRate: 10.04, trialScore: 62.83, targetRate: 30.10, targetScore: 80.80, totalScore: 71.82, rank: 9 },
+  { manager: "贾迪赫", staffReq: 69, potential: 1385, testDrive: 210, trialRate: 15.16, trialScore: 94.86, targetRate: 33.80, targetScore: 90.64, totalScore: 92.75, rank: 3 },
+  { manager: "李博恩", staffReq: 126, potential: 2346, testDrive: 375, trialRate: 15.98, trialScore: 100.00, targetRate: 33.10, targetScore: 88.63, totalScore: 94.32, rank: 2 },
+  { manager: "李稳", staffReq: 44, potential: 992, testDrive: 127, trialRate: 12.8, trialScore: 80.09, targetRate: 32.10, targetScore: 85.96, totalScore: 83.02, rank: 5 },
+  { manager: "罗捷", staffReq: 74, potential: 2233, testDrive: 227, trialRate: 10.17, trialScore: 63.60, targetRate: 34.10, targetScore: 91.35, totalScore: 77.48, rank: 7 },
+  { manager: "秦启超", staffReq: 95, potential: 2149, testDrive: 319, trialRate: 14.84, trialScore: 92.86, targetRate: 37.30, targetScore: 100.00, totalScore: 96.43, rank: 1 },
+  { manager: "熊俊晖", staffReq: 110, potential: 2487, testDrive: 301, trialRate: 12.1, trialScore: 75.72, targetRate: 30.40, targetScore: 81.49, totalScore: 78.60, rank: 6 },
+  { manager: "余子恩", staffReq: 102, potential: 2339, testDrive: 256, trialRate: 10.94, trialScore: 68.47, targetRate: 27.90, targetScore: 74.74, totalScore: 71.61, rank: 10 },
+  { manager: "余子恩(代)", staffReq: 67, potential: 1648, testDrive: 118, trialRate: 7.16, trialScore: 44.79, targetRate: 19.60, targetScore: 52.45, totalScore: 48.62, rank: 12 },
+  { manager: "庄文迪", staffReq: 66, potential: 1731, testDrive: 182, trialRate: 10.51, trialScore: 65.78, targetRate: 30.60, targetScore: 82.12, totalScore: 73.95, rank: 8 },
+];
+
+// 华南汇总行
+const SUMMARY_ROW = {
+  manager: "华南",
+  staffReq: 1084,
+  potential: 25208,
+  testDrive: 3012,
+  trialRate: 11.95,
+  trialScore: null, targetRate: null, targetScore: null, totalScore: null, rank: null
+};
+
+// 12个零售高级经理中最大的潜客试驾率（用于单店潜客试驾率得分的分母）
+// 用未舍入的原始率（375/2346*100=15.9847），与上方主表得分口径一致
+const MAX_TRIAL_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / d.potential * 100));
+
+// 周期天数：用于「试驾目标完成率 = 试驾量 ÷ (人数要求 × 天数)」。
+// 8.1–8.9 共9天；后续周度天数调整时（如下周7天）只需改这一个值。
+const PERIOD_DAYS = 9;
+
+// 12个零售高级经理中最大的试驾目标完成率（用于单店试驾目标完成率得分的分母）
+// 用未舍入原始率，与上方主表得分口径一致
+const MAX_TARGET_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / (d.staffReq * PERIOD_DAYS) * 100));
+
+// ============================================================
+// 工具函数
+// ============================================================
+
+/** 根据排名/数值返回背景色class（前N绿，后N红）*/
+function getRankBgClass(rank, total) {
+  if (rank === null || rank === undefined) return "";
+  const topN = Math.ceil(total * 0.3); // 前30%绿
+  const bottomN = Math.floor(total * 0.3); // 后30%红
+  const midN = Math.floor(total * 0.15);
+
+  if (rank <= midN) return "bg-green-deep";
+  if (rank <= topN) return "bg-green-med";
+  if (rank <= topN + midN) return "bg-green-light";
+  if (rank > total - midN) return "bg-red-deep";
+  if (rank > total - bottomN) return "bg-red-med";
+  if (rank > total - topN) return "bg-red-light";
+  return "bg-neutral";
+}
+
+/** 根据百分比值返回背景色（高绿低红）— 用于试驾率、完成率列 */
+function getPctBgClass(value, allValues) {
+  const sorted = [...allValues].sort((a, b) => b - a);
+  const idx = sorted.indexOf(value);
+  const total = sorted.length;
+  const topN = Math.ceil(total * 0.3);
+  const midN = Math.floor(total * 0.15);
+  const bottomN = Math.floor(total * 0.3);
+
+  if (idx < midN) return "bg-green-deep";
+  if (idx < topN) return "bg-green-med";
+  if (idx < topN + midN) return "bg-green-light";
+  if (idx > total - midN) return "bg-red-deep";
+  if (idx > total - bottomN) return "bg-red-med";
+  if (idx > total - topN) return "bg-red-light";
+  return "bg-neutral";
+}
+
+function getPctBgClassFixed(value, allValues) {
+  const sorted = [...allValues].sort((a, b) => b - a);
+  const idx = sorted.indexOf(value);
+  const n = sorted.length;
+  const q1 = Math.floor(n * 0.25);
+  const q2 = Math.floor(n * 0.5);
+  const q3 = Math.floor(n * 0.75);
+
+  if (idx < q1) return "bg-green-deep";
+  if (idx < q2) return "bg-green-med";
+  if (idx < q3) return "bg-green-light";
+  if (idx >= n - q1) return "bg-red-deep";
+  if (idx >= n - q2) return "bg-red-med";
+  return "bg-red-light";
+}
+
+// 热力图：分档色块（7档，数值越大越绿、越小越红/橙），返回class名
+function heatBand(value, allValues) {
+  if (value === null || value === undefined) return "";
+  const sorted = [...allValues].sort((a, b) => b - a);  // 降序：idx=0 为最大值
+  const n = sorted.length;
+  const idx = sorted.indexOf(value);
+  // 7档：越大越绿（前档深绿）→ 越小越红（后档深橘红）
+  const bandSize = Math.max(1, Math.floor(n / 7));
+  if (idx < bandSize) return "heat-1";       // 深绿（最大值）
+  if (idx < bandSize * 2) return "heat-2";   // 中绿
+  if (idx < bandSize * 3) return "heat-3";   // 浅绿
+  if (idx < bandSize * 4) return "heat-4";   // 淡绿（中间）
+  if (idx < bandSize * 5) return "heat-5";   // 淡橙
+  if (idx < bandSize * 6) return "heat-6";   // 橙红
+  return "heat-7";                             // 深橘红（最小值）
+}
+
+function fmt(n, decimals = 1) {
+  if (n === null || n === undefined) return "-";
+  return Number(n).toFixed(decimals);
+}
+
+function fmtInt(n) {
+  if (n === null || n === undefined) return "-";
+  return Number(n).toLocaleString("zh-CN");
+}
+
+// ============================================================
+// 渲染主表
+// ============================================================
+function renderMainTable() {
+  const tbody = document.getElementById("mainBody");
+  const total = MANAGER_DATA.length;
+
+  // 试驾目标完成率 = 试驾量 ÷ (人数要求 × 周期天数)，保留2位小数
+  const targetRateOf = d => d.testDrive / (d.staffReq * PERIOD_DAYS) * 100;
+  MANAGER_DATA.forEach(d => { d.targetRate = +targetRateOf(d).toFixed(2); });
+  SUMMARY_ROW.targetRate = +targetRateOf(SUMMARY_ROW).toFixed(2);
+  const targetRates = MANAGER_DATA.map(d => d.targetRate);
+
+  // 试驾目标完成率得分 = 自身试驾目标完成率 ÷ 12小区最大试驾目标完成率 × 100（0-100分制）
+  // 若12小区最大完成率 >100%，则分母取 100 封顶；结果保留两位小数
+  // 得分用未舍入原始率计算（与潜客试驾率得分口径一致），避免中间四舍五入导致偏差（如华南 82.74→82.75）
+  const maxRawTargetRate = Math.max(...MANAGER_DATA.map(d => targetRateOf(d)));
+  const targetDenom = maxRawTargetRate > 100 ? 100 : maxRawTargetRate;
+  MANAGER_DATA.forEach(d => { d.targetScore = +((targetRateOf(d) / targetDenom) * 100).toFixed(2); });
+  SUMMARY_ROW.targetScore = +((targetRateOf(SUMMARY_ROW) / targetDenom) * 100).toFixed(2);
+
+  const trialRates = MANAGER_DATA.map(d => d.trialRate);
+
+  // 潜客试驾率得分 = 自身潜客试驾率 ÷ 12个小区最大潜客试驾率 ×100（保留2位小数）
+  // 注意：必须用「未四舍五入的原始率」计算，避免中间舍入误差（华南 11.9486÷15.9847×100=74.75，而非 11.95÷15.98×100=74.78）
+  const rawRateOf = d => d.testDrive / d.potential * 100;
+  const maxRawRate = Math.max(...MANAGER_DATA.map(rawRateOf));
+  MANAGER_DATA.forEach(d => {
+    d.trialScore = +((rawRateOf(d) / maxRawRate) * 100).toFixed(2);
+  });
+  SUMMARY_ROW.trialScore = +((rawRateOf(SUMMARY_ROW) / maxRawRate) * 100).toFixed(2);
+
+  // 综合得分 = 潜客试驾率得分 × 50% + 试驾目标完成率得分 × 50%
+  MANAGER_DATA.forEach(d => { d.totalScore = +(d.trialScore * 0.5 + d.targetScore * 0.5).toFixed(2); });
+  SUMMARY_ROW.totalScore = +(SUMMARY_ROW.trialScore * 0.5 + SUMMARY_ROW.targetScore * 0.5).toFixed(2);
+
+  // 综合排名 = 按综合得分降序排，第1名分数最高，依次到第12名
+  const sortedMgrs = [...MANAGER_DATA].sort((a, b) => b.totalScore - a.totalScore);
+  sortedMgrs.forEach((d, i) => { d.rank = i + 1; });
+
+  let html = "";
+
+  // 经理行（按综合得分降序：第1名→第12名）
+  sortedMgrs.forEach(d => {
+    html += `<tr>
+      <td>${d.manager}</td>
+      <td class="num-cell">${fmtInt(d.staffReq)}</td>
+      <td class="num-cell">${fmtInt(d.potential)}</td>
+      <td class="num-cell">${fmtInt(d.testDrive)}</td>
+      <td class="num-cell ${heatBand(d.trialRate, trialRates)}"><span>${d.trialRate.toFixed(2)}%</span></td>
+      <td class="num-cell">${fmt(d.trialScore, 2)}</td>
+      <td class="num-cell ${getPctBgClassFixed(d.targetRate, targetRates)}"><span>${fmt(d.targetRate, 2)}%</span></td>
+      <td class="num-cell">${fmt(d.targetScore, 2)}</td>
+      <td class="num-cell">${fmt(d.totalScore, 2)}</td>
+      <td class="num-cell ${getRankBgClass(d.rank, total)}"><span>${d.rank}</span></td>
+    </tr>`;
+  });
+
+  // 华南汇总行
+  html += `<tr class="summary-row">
+    <td>${SUMMARY_ROW.manager}</td>
+    <td class="num-cell">${fmtInt(SUMMARY_ROW.staffReq)}</td>
+    <td class="num-cell">${fmtInt(SUMMARY_ROW.potential)}</td>
+    <td class="num-cell">${fmtInt(SUMMARY_ROW.testDrive)}</td>
+    <td class="num-cell">${SUMMARY_ROW.trialRate.toFixed(2)}%</td>
+    <td class="num-cell">${fmt(SUMMARY_ROW.trialScore, 2)}</td>
+    <td class="num-cell">${fmt(SUMMARY_ROW.targetRate, 2)}%</td>
+    <td class="num-cell">${fmt(SUMMARY_ROW.targetScore, 2)}</td>
+    <td class="num-cell">${fmt(SUMMARY_ROW.totalScore, 2)}</td>
+    <td class="num-cell">-</td>
+  </tr>`;
+
+  // 华南下方的说明文字
+  html += `<tr class="note-row"><td colspan="10">1、各店人数要求为7月版本，本期试驾目标为9批/人</td></tr>`;
+  html += `<tr class="note-row"><td colspan="10">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
+
+  tbody.innerHTML = html;
+}
+
+// ============================================================
+// 渲染子片区门店明细（单表连续 + 经理下拉筛选）
+// ============================================================
+function renderStoreGroups() {
+  // 填充下拉选项（按主表经理顺序 + 其余经理）
+  const sel = document.getElementById("managerFilter");
+  const managerOrder = [...MANAGER_DATA.map(d => d.manager)];
+  [...new Set(STORE_DATA.map(s => s.manager))].forEach(m => {
+    if (!managerOrder.includes(m)) managerOrder.push(m);
+  });
+  managerOrder.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m;
+    opt.textContent = m;
+    sel.appendChild(opt);
+  });
+
+  filterStores(); // 初始渲染全部
+}
+
+// 根据下拉选项筛选门店
+function filterStores() {
+  const sel = document.getElementById("managerFilter");
+  const selected = sel.value;
+  const tbody = document.getElementById("storeBody");
+
+  const rows = selected
+    ? STORE_DATA.filter(s => s.manager === selected)
+    : STORE_DATA;
+
+  let html = "";
+  const targetDenom = MAX_TARGET_RATE > 100 ? 100 : MAX_TARGET_RATE;
+  rows.forEach(s => {
+    const storeTrialRateRaw = s.potential && s.drive != null ? (s.drive / s.potential * 100) : null;
+    const storeTrialRate = storeTrialRateRaw != null ? +storeTrialRateRaw.toFixed(2) : null;
+    const trialScore = storeTrialRateRaw != null ? +((storeTrialRateRaw / MAX_TRIAL_RATE) * 100).toFixed(2) : null;
+    const storeTargetRateRaw = s.staffReq ? (s.drive / (s.staffReq * PERIOD_DAYS) * 100) : null;
+    const storeTargetRate = storeTargetRateRaw != null ? +storeTargetRateRaw.toFixed(2) : null;
+    const targetScore = storeTargetRateRaw != null ? +((storeTargetRateRaw / targetDenom) * 100).toFixed(2) : null;
+    const storeTotalScore = (trialScore != null && targetScore != null) ? +(trialScore * 0.5 + targetScore * 0.5).toFixed(2) : null;
+    html += `<tr>
+      <td style="text-align:center;padding-left:8px;white-space:nowrap;">${s.store}</td>
+      <td>${s.manager}</td>
+      <td>${s.group}</td>
+      <td>${s.type}</td>
+      <td class="num-cell">${s.staffReq}</td>
+      <td class="num-cell">${s.potential == null ? "-" : s.potential.toLocaleString("zh-CN")}</td>
+      <td class="num-cell">${s.drive == null ? "-" : s.drive.toLocaleString("zh-CN")}</td>
+      <td class="num-cell">${storeTrialRate != null ? storeTrialRate.toFixed(2) + "%" : "-"}</td>
+      <td class="num-cell">${trialScore == null ? "-" : trialScore.toFixed(2)}</td>
+      <td class="num-cell">${storeTargetRate == null ? "-" : storeTargetRate.toFixed(2) + "%"}</td>
+      <td class="num-cell">${targetScore == null ? "-" : targetScore.toFixed(2)}</td>
+      <td class="num-cell">${storeTotalScore == null ? "-" : storeTotalScore.toFixed(2)}</td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = html;
+  document.getElementById("storeCount").textContent =
+    `共 ${rows.length} 家门店${selected ? "（" + selected + "）" : ""}`;
+}
+
+// ============================================================
+// 展开/收起子片区
+// ============================================================
+let subExpanded = true;
+function toggleSub() {
+  subExpanded = !subExpanded;
+  const header = document.querySelector(".sub-header");
+  const content = document.getElementById("subContent");
+  if (subExpanded) {
+    header.classList.remove("collapsed");
+    header.querySelector(".arrow").textContent = "▼ 收起";
+    content.classList.remove("collapsed");
+  } else {
+    header.classList.add("collapsed");
+    header.querySelector(".arrow").textContent = "▶ 展开";
+    content.classList.add("collapsed");
+  }
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+// 动态日期：显示昨天的日期（格式 M/D）
+(function() {
+  var d = new Date();
+  d.setDate(d.getDate() - 1);
+  document.getElementById("dashDate").textContent = (d.getMonth() + 1) + "/" + d.getDate();
+})();
+
+renderMainTable();
+renderStoreGroups();
+</script>
+
+</body>
+</html>
