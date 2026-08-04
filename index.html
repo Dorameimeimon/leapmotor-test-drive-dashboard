@@ -470,10 +470,10 @@ function getRankBgClass(rank, total) {
  *  低于华南：红系，数值最小→最深红，最接近华南（最大低于值）→最浅红
  *  返回 { key: { bg, txt } }，key 为经理名
  */
-const CG_DEEP = [27, 94, 32];     // 深绿 #1b5e20
-const CG_LIGHT = [200, 240, 200]; // 浅绿
-const CR_DEEP = [183, 28, 28];    // 深红 #b71c1c
-const CR_LIGHT = [255, 214, 214]; // 浅红
+const CG_DEEP = [26, 145, 85];     // 翠绿 #1e9155（最大值最深）
+const CG_LIGHT = [162, 228, 195];  // 浅薄荷绿 #a2e4c3（最接近华南最浅）
+const CR_DEEP = [255, 125, 75];    // 珊瑚橙 #ff7d4b（最小值最深）
+const CR_LIGHT = [255, 222, 208];  // 浅蜜桃 #ffded0（最接近华南最浅）
 
 function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
 function lerpColor(c1, c2, t) {
