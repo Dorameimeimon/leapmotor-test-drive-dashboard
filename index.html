@@ -260,10 +260,10 @@
       <th class="col-pct">试驾目标<br>完成率</th>
       <th class="col-score">试驾目标<br>完成率得分</th>
       <th class="col-score">综合得分</th>
+      <th class="col-rank">综合排名</th>
       <th class="col-pct">排程<br>目标</th>
       <th class="col-score">排程数</th>
       <th class="col-pct">排程目标<br>完成率</th>
-      <th class="col-rank">综合排名</th>
     </tr>
   </thead>
   <tbody id="mainBody"></tbody>
@@ -616,10 +616,10 @@ function renderMainTable() {
       <td class="num-cell heat-cell"><span style="background:${gc.bg};color:${gc.txt}">${d.targetRate.toFixed(2)}%</span></td>
       <td class="num-cell">${fmt(d.targetScore, 2)}</td>
       <td class="num-cell">${fmt(d.totalScore, 2)}</td>
+      <td class="num-cell heat-cell"><span style="background:${rankColorMap[d.rank].bg};color:${rankColorMap[d.rank].txt}">${d.rank}</span></td>
       <td class="num-cell">${fmtInt(d.schedTarget)}</td>
       <td class="num-cell">${fmtInt(d.schedCount)}</td>
       <td class="num-cell">${fmt(d.schedRate, 2)}%</td>
-      <td class="num-cell heat-cell"><span style="background:${rankColorMap[d.rank].bg};color:${rankColorMap[d.rank].txt}">${d.rank}</span></td>
     </tr>`;
   });
 
@@ -633,12 +633,12 @@ function renderMainTable() {
     <td class="num-cell">${fmt(SUMMARY_ROW.trialScore, 2)}</td>
     <td class="num-cell"><span>${SUMMARY_ROW.targetRate.toFixed(2)}%</span></td>
     <td class="num-cell">${fmt(SUMMARY_ROW.targetScore, 2)}</td>
-    <td class="num-cell">${fmt(SUMMARY_ROW.totalScore, 2)}</td>
-    <td class="num-cell">${fmtInt(SUMMARY_ROW.schedTarget)}</td>
-    <td class="num-cell">${fmtInt(SUMMARY_ROW.schedCount)}</td>
-    <td class="num-cell">${fmt(SUMMARY_ROW.schedRate, 2)}%</td>
-    <td class="num-cell">-</td>
-  </tr>`;
+      <td class="num-cell">${fmt(SUMMARY_ROW.totalScore, 2)}</td>
+      <td class="num-cell">-</td>
+      <td class="num-cell">${fmtInt(SUMMARY_ROW.schedTarget)}</td>
+      <td class="num-cell">${fmtInt(SUMMARY_ROW.schedCount)}</td>
+      <td class="num-cell">${fmt(SUMMARY_ROW.schedRate, 2)}%</td>
+    </tr>`;
 
   // 华南下方的说明文字
   html += `<tr class="note-row"><td colspan="13">1、各店人数要求为7月版本，本期试驾目标为9批/人</td></tr>`;
