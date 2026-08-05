@@ -86,11 +86,11 @@
   /* ===== 主表：列宽统一收窄（仅主表，不影响下方门店表）===== */
   #mainTable {
     table-layout: fixed;
-    width: 1080px;
+    width: 1300px;
     margin: 0 auto;
   }
   #mainTable th, #mainTable td {
-    width: 108px;
+    width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -260,6 +260,9 @@
       <th class="col-pct">试驾目标<br>完成率</th>
       <th class="col-score">试驾目标<br>完成率得分</th>
       <th class="col-score">综合得分</th>
+      <th class="col-pct">排程<br>目标</th>
+      <th class="col-score">排程数</th>
+      <th class="col-pct">排程目标<br>完成率</th>
       <th class="col-rank">综合排名</th>
     </tr>
   </thead>
@@ -295,6 +298,9 @@
           <th class="col-pct">试驾目标<br>完成率</th>
           <th class="col-score">试驾目标<br>完成率得分</th>
           <th class="col-score">综合<br>得分</th>
+          <th class="col-pct">排程<br>目标</th>
+          <th class="col-score">排程数</th>
+          <th class="col-pct">排程目标<br>完成率</th>
         </tr></thead>
         <tbody id="storeBody"></tbody>
       </table>
@@ -311,107 +317,107 @@
 
 // ---- 门店明细数据（用户提供的93家门店）----
 const STORE_DATA = [
-  { store: "东莞零跑中心寮步车城店", manager: "方任昊", group: "东富", type: "零跑中心", staffReq: 16, potential: 381, drive: 72 },
-  { store: "东莞零跑中心常朗路店", manager: "方任昊", group: "东朋", type: "零跑中心", staffReq: 14, potential: 475, drive: 33 },
-  { store: "东莞体验中心东城店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 6, potential: 313, drive: 21 },
-  { store: "东莞体验中心石排大道店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 9, potential: 181, drive: 21 },
-  { store: "东莞体验中心松山湖店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 8, potential: 293, drive: 14 },
-  { store: "东莞零跑中心虎门车城店", manager: "方任昊", group: "华跃", type: "零跑中心", staffReq: 12, potential: 371, drive: 27 },
-  { store: "东莞零跑中心莞太路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 15, potential: 438, drive: 56 },
-  { store: "东莞零跑中心长安振安东路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 9, potential: 147, drive: 19 },
-  { store: "东莞体验中心大岭山镇店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 6, potential: 192, drive: 18 },
-  { store: "东莞体验中心厚街店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 8, potential: 225, drive: 25 },
-  { store: "韶关零跑中心沐溪大道店", manager: "胡浩", group: "利泰", type: "零跑中心", staffReq: 10, potential: 218, drive: 38 },
-  { store: "韶关体验中心浈江大道店", manager: "胡浩", group: "利泰", type: "城市展厅", staffReq: 9, potential: 303, drive: 23 },
-  { store: "惠州零跑中心金山汽车城店", manager: "胡浩", group: "新零致", type: "零跑中心", staffReq: 20, potential: 428, drive: 86 },
-  { store: "惠州体验中心惠阳大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 8, potential: 272, drive: 20 },
-  { store: "汕尾体验中心汕尾大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 9, potential: 239, drive: 30 },
-  { store: "惠州零跑中心惠南汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 18, potential: 517, drive: 73 },
-  { store: "惠州零跑中心仲恺汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 10, potential: 263, drive: 46 },
-  { store: "惠州体验中心河南岸车城店", manager: "胡浩", group: "一维", type: "城市展厅", staffReq: 8, potential: 411, drive: 40 },
-  { store: "广州零跑中心科学城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 15, potential: 544, drive: 60 },
-  { store: "广州零跑中心新塘汽车城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 16, potential: 735, drive: 59 },
-  { store: "广州体验中心白云机场路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 468, drive: 40 },
-  { store: "广州体验中心番禺大道店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 16, potential: 605, drive: 44 },
-  { store: "广州体验中心天河广汕路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 468, drive: 41 },
-  { store: "广州体验中心天河汇彩路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 464, drive: 44 },
-  { store: "广州体验中心增城店", manager: "黄伟峰", group: "凌跑商贸", type: "卫星店", staffReq: 6, potential: 220, drive: 38 },
-  { store: "广州零跑中心沥滘海心沙店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 14, potential: 299, drive: 50 },
-  { store: "广州零跑中心美轮汽车园店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 10, potential: 273, drive: 23 },
-  { store: "广州零跑中心亚运大道店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 15, potential: 405, drive: 44 },
-  { store: "广州零跑中心金马汽车城店", manager: "黄伟峰", group: "沃之瑞", type: "零跑中心", staffReq: 11, potential: 478, drive: 35 },
-  { store: "深圳零跑中心芙蓉路店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 12, potential: 351, drive: 30 },
-  { store: "深圳零跑中心南山嘉进隆店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 16, potential: 470, drive: 79 },
-  { store: "深圳体验中心福田瑞鹏达店", manager: "贾迪赫", group: "标特", type: "城市展厅", staffReq: 9, potential: 205, drive: 50 },
-  { store: "深圳零跑中心百世汽车城店", manager: "贾迪赫", group: "九兴", type: "零跑中心", staffReq: 15, potential: 343, drive: 49 },
-  { store: "深圳体验中心锦龙大道店", manager: "贾迪赫", group: "九兴", type: "城市展厅", staffReq: 7, potential: 259, drive: 12 },
-  { store: "深圳体验中心龙岗信义店", manager: "贾迪赫", group: "九兴", type: "城市展厅", staffReq: 10, potential: 193, drive: 28 },
-  { store: "三亚零跑中心榆亚路店", manager: "李博恩", group: "合群", type: "零跑中心", staffReq: 11, potential: 124, drive: 27 },
-  { store: "三亚体验中心迎宾路汽车城店", manager: "李博恩", group: "合群", type: "城市展厅", staffReq: 11, potential: 190, drive: 18 },
-  { store: "海口零跑中心美安科技城店", manager: "李博恩", group: "铧丰", type: "零跑中心", staffReq: 10, potential: 230, drive: 47 },
-  { store: "海口体验中心上邦百汇城店", manager: "李博恩", group: "铧丰", type: "商超", staffReq: 8, potential: 169, drive: 40 },
-  { store: "海口零跑中心海盛路店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 8, potential: 192, drive: 17 },
-  { store: "海口零跑中心南海大道店（销售）", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 17, potential: 460, drive: 81 },
-  { store: "海口零跑中心南海大道东店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 17, potential: 505, drive: 77 },
-  { store: "海口体验中心海甸城店", manager: "李博恩", group: "九兴", type: "商超", staffReq: 10, potential: 182, drive: 30 },
-  { store: "海口体验中心海口东站店", manager: "李博恩", group: "九兴", type: "城市展厅", staffReq: 8, potential: 290, drive: 31 },
-  { store: "海口零跑中心琼山大道店", manager: "李博恩", group: "正大", type: "零跑中心", staffReq: 14, potential: 380, drive: 65 },
-  { store: "海口体验中心江东店", manager: "李博恩", group: "正大", type: "城市展厅", staffReq: 12, potential: 314, drive: 43 },
-  { store: "梅州零跑中心剑英大道店", manager: "李稳", group: "骏诚", type: "零跑中心", staffReq: 9, potential: 185, drive: 33 },
-  { store: "云浮体验中心环市中路店", manager: "李稳", group: "利生", type: "城市展厅", staffReq: 9, potential: 184, drive: 17 },
-  { store: "潮州零跑中心潮汕路店", manager: "李稳", group: "荣通", type: "零跑中心", staffReq: 10, potential: 276, drive: 17 },
-  { store: "揭阳零跑中心荣通汽车城店", manager: "李稳", group: "荣通", type: "零跑中心", staffReq: 10, potential: 419, drive: 44 },
-  { store: "揭阳体验中心普宁万泰新天地商场店", manager: "李稳", group: "荣通", type: "商超", staffReq: 6, potential: 256, drive: 33 },
-  { store: "深圳零跑中心宝运达汽车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 16, potential: 491, drive: 60 },
-  { store: "深圳零跑中心光明车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 14, potential: 596, drive: 61 },
-  { store: "深圳零跑中心万国城旗舰店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 12, potential: 391, drive: 46 },
-  { store: "深圳零跑中心远望车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 14, potential: 474, drive: 36 },
-  { store: "深圳体验中心杰鹏车城店", manager: "罗捷", group: "新易腾", type: "城市展厅", staffReq: 8, potential: 275, drive: 31 },
-  { store: "深圳体验中心龙华中心店", manager: "罗捷", group: "新易腾", type: "城市展厅", staffReq: 10, potential: 478, drive: 37 },
-  { store: "珠海零跑中心南屏珠海大道店", manager: "秦启超", group: "达田", type: "零跑中心", staffReq: 12, potential: 314, drive: 33 },
-  { store: "珠海体验中心美满车城店", manager: "秦启超", group: "达田", type: "城市展厅", staffReq: 9, potential: 348, drive: 37 },
-  { store: "中山零跑中心金宁汽车城店", manager: "秦启超", group: "金盈", type: "零跑中心", staffReq: 9, potential: 305, drive: 16 },
-  { store: "中山零跑中心彩虹大道店", manager: "秦启超", group: "美轮", type: "零跑中心", staffReq: 13, potential: 382, drive: 44 },
-  { store: "中山零跑中心中山六路店", manager: "秦启超", group: "美轮", type: "零跑中心", staffReq: 8, potential: 300, drive: 43 },
-  { store: "中山体验中心港口店", manager: "秦启超", group: "美轮", type: "城市展厅", staffReq: 8, potential: 226, drive: 21 },
-  { store: "珠海零跑中心上冲车城店", manager: "秦启超", group: "申裕", type: "零跑中心", staffReq: 14, potential: 370, drive: 96 },
-  { store: "珠海体验中心西部车城店", manager: "秦启超", group: "申裕", type: "城市展厅", staffReq: 9, potential: 268, drive: 37 },
-  { store: "中山零跑中心小榄菊城大道店", manager: "秦启超", group: "智盈", type: "零跑中心", staffReq: 13, potential: 332, drive: 48 },
-  { store: "广州零跑中心白云大道店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 13, potential: 391, drive: 36 },
-  { store: "广州零跑中心花都建设路店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 12, potential: 527, drive: 39 },
-  { store: "广州体验中心广花路店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 6, potential: 255, drive: 19 },
-  { store: "广州体验中心花都北站店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 158, drive: 10 },
-  { store: "广州体验中心为正车城店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 226, drive: 31 },
-  { store: "河源零跑中心河源大道店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 12, potential: 206, drive: 50 },
-  { store: "河源体验中心坚基购物中心店", manager: "熊俊晖", group: "骏延", type: "商超", staffReq: 6, potential: 183, drive: 7 },
-  { store: "清远零跑中心港鸿汽车城店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 10, potential: 256, drive: 37 },
-  { store: "清远体验中心奇晟汽车城店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 207, drive: 27 },
-  { store: "汕头零跑中心汕汾路店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 13, potential: 435, drive: 71 },
-  { store: "汕头零跑中心金凤路店", manager: "熊俊晖", group: "亿海", type: "零跑中心", staffReq: 11, potential: 250, drive: 31 },
-  { store: "汕头体验中心广汕路店", manager: "熊俊晖", group: "亿海", type: "城市展厅", staffReq: 6, potential: 162, drive: 33 },
-  { store: "江门零跑中心建设路店", manager: "余子恩", group: "磐鼎", type: "零跑中心", staffReq: 12, potential: 241, drive: 53 },
-  { store: "佛山零跑中心顺德大良车城店", manager: "余子恩", group: "未来智选", type: "零跑中心", staffReq: 18, potential: 560, drive: 58 },
-  { store: "佛山体验中心北滘车城店", manager: "余子恩", group: "未来智选", type: "城市展厅", staffReq: 8, potential: 318, drive: 25 },
-  { store: "佛山体验中心容桂车城店", manager: "余子恩", group: "未来智选", type: "城市展厅", staffReq: 8, potential: 262, drive: 18 },
-  { store: "佛山零跑中心三水友好车城店", manager: "余子恩", group: "智迅", type: "零跑中心", staffReq: 17, potential: 584, drive: 50 },
-  { store: "佛山体验中心高明荷香路店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 5, potential: 180, drive: 31 },
-  { store: "佛山体验中心狮山汽车城店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 7, potential: 149, drive: 8 },
-  { store: "江门零跑中心冈州大道店", manager: "余子恩", group: "智迅", type: "零跑中心", staffReq: 15, potential: 333, drive: 44 },
-  { store: "江门体验中心开平车城店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 8, potential: 217, drive: 27 },
-  { store: "江门体验中心蓬江华鸿店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 4, potential: 157, drive: 6 },
-  { store: "佛山零跑中心海八路汽车城店", manager: "余子恩(代)", group: "华跃", type: "零跑中心", staffReq: 16, potential: 345, drive: 28 },
-  { store: "佛山体验中心广佛汽车城店", manager: "余子恩(代)", group: "华跃", type: "城市展厅", staffReq: 6, potential: 238, drive: 3 },
-  { store: "佛山体验中心海八西路店", manager: "余子恩(代)", group: "华跃", type: "城市展厅", staffReq: 8, potential: 285, drive: 43 },
-  { store: "佛山零跑中心禅城国际汽车城店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 16, potential: 485, drive: 52 },
-  { store: "佛山零跑中心桂澜路店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 8, potential: 287, drive: 3 },
-  { store: "佛山零跑中心南庄汽车城店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 13, potential: 425, drive: 23 },
-  { store: "茂名零跑中心茂名大道店", manager: "庄文迪", group: "美轮", type: "零跑中心", staffReq: 13, potential: 359, drive: 38 },
-  { store: "茂名体验中心茂水路店", manager: "庄文迪", group: "美轮", type: "城市展厅", staffReq: 5, potential: 228, drive: 26 },
-  { store: "肇庆零跑中心肇庆大道店", manager: "庄文迪", group: "美轮", type: "零跑中心", staffReq: 13, potential: 470, drive: 54 },
-  { store: "阳江零跑中心溢信汽车城店", manager: "庄文迪", group: "溢信", type: "零跑中心", staffReq: 10, potential: 235, drive: 25 },
-  { store: "湛江零跑中心海田车城店", manager: "庄文迪", group: "源流", type: "零跑中心", staffReq: 13, potential: 568, drive: 31 },
-  { store: "湛江体验中心瀚龙车城店", manager: "庄文迪", group: "源流", type: "城市展厅", staffReq: 6, potential: 279, drive: 28 },
-  { store: "湛江体验中心粤西车城店", manager: "庄文迪", group: "源流", type: "城市展厅", staffReq: 6, potential: 245, drive: 25 },
+  { store: "东莞零跑中心寮步车城店", manager: "方任昊", group: "东富", type: "零跑中心", staffReq: 16, potential: 381, drive: 72, schedule: 42 },
+  { store: "东莞零跑中心常朗路店", manager: "方任昊", group: "东朋", type: "零跑中心", staffReq: 14, potential: 475, drive: 33, schedule: 39 },
+  { store: "东莞体验中心东城店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 6, potential: 313, drive: 21, schedule: 4 },
+  { store: "东莞体验中心石排大道店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 9, potential: 181, drive: 21, schedule: 12 },
+  { store: "东莞体验中心松山湖店", manager: "方任昊", group: "东朋", type: "城市展厅", staffReq: 8, potential: 293, drive: 14, schedule: 23 },
+  { store: "东莞零跑中心虎门车城店", manager: "方任昊", group: "华跃", type: "零跑中心", staffReq: 12, potential: 371, drive: 27, schedule: 41 },
+  { store: "东莞零跑中心莞太路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 15, potential: 438, drive: 56, schedule: 32 },
+  { store: "东莞零跑中心长安振安东路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 9, potential: 147, drive: 19, schedule: 1 },
+  { store: "东莞体验中心大岭山镇店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 6, potential: 192, drive: 18, schedule: 10 },
+  { store: "东莞体验中心厚街店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 8, potential: 225, drive: 25, schedule: 13 },
+  { store: "韶关零跑中心沐溪大道店", manager: "胡浩", group: "利泰", type: "零跑中心", staffReq: 10, potential: 218, drive: 38, schedule: 17 },
+  { store: "韶关体验中心浈江大道店", manager: "胡浩", group: "利泰", type: "城市展厅", staffReq: 9, potential: 303, drive: 23, schedule: 9 },
+  { store: "惠州零跑中心金山汽车城店", manager: "胡浩", group: "新零致", type: "零跑中心", staffReq: 20, potential: 428, drive: 86, schedule: 76 },
+  { store: "惠州体验中心惠阳大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 8, potential: 272, drive: 20, schedule: 55 },
+  { store: "汕尾体验中心汕尾大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 9, potential: 239, drive: 30, schedule: 22 },
+  { store: "惠州零跑中心惠南汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 18, potential: 517, drive: 73, schedule: 58 },
+  { store: "惠州零跑中心仲恺汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 10, potential: 263, drive: 46, schedule: 43 },
+  { store: "惠州体验中心河南岸车城店", manager: "胡浩", group: "一维", type: "城市展厅", staffReq: 8, potential: 411, drive: 40, schedule: 23 },
+  { store: "广州零跑中心科学城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 15, potential: 544, drive: 60, schedule: 33 },
+  { store: "广州零跑中心新塘汽车城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 16, potential: 735, drive: 59, schedule: 63 },
+  { store: "广州体验中心白云机场路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 468, drive: 40, schedule: 29 },
+  { store: "广州体验中心番禺大道店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 16, potential: 605, drive: 44, schedule: 53 },
+  { store: "广州体验中心天河广汕路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 468, drive: 41, schedule: 37 },
+  { store: "广州体验中心天河汇彩路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 464, drive: 44, schedule: 42 },
+  { store: "广州体验中心增城店", manager: "黄伟峰", group: "凌跑商贸", type: "卫星店", staffReq: 6, potential: 220, drive: 38, schedule: 30 },
+  { store: "广州零跑中心沥滘海心沙店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 14, potential: 299, drive: 50, schedule: 21 },
+  { store: "广州零跑中心美轮汽车园店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 10, potential: 273, drive: 23, schedule: 14 },
+  { store: "广州零跑中心亚运大道店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 15, potential: 405, drive: 44, schedule: 23 },
+  { store: "广州零跑中心金马汽车城店", manager: "黄伟峰", group: "沃之瑞", type: "零跑中心", staffReq: 11, potential: 478, drive: 35, schedule: 16 },
+  { store: "深圳零跑中心芙蓉路店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 12, potential: 351, drive: 30, schedule: 27 },
+  { store: "深圳零跑中心南山嘉进隆店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 16, potential: 470, drive: 79, schedule: 46 },
+  { store: "深圳体验中心福田瑞鹏达店", manager: "贾迪赫", group: "标特", type: "城市展厅", staffReq: 9, potential: 205, drive: 50, schedule: 19 },
+  { store: "深圳零跑中心百世汽车城店", manager: "贾迪赫", group: "九兴", type: "零跑中心", staffReq: 15, potential: 343, drive: 49, schedule: 23 },
+  { store: "深圳体验中心锦龙大道店", manager: "贾迪赫", group: "九兴", type: "城市展厅", staffReq: 7, potential: 259, drive: 12, schedule: 17 },
+  { store: "深圳体验中心龙岗信义店", manager: "贾迪赫", group: "九兴", type: "城市展厅", staffReq: 10, potential: 193, drive: 28, schedule: 15 },
+  { store: "三亚零跑中心榆亚路店", manager: "李博恩", group: "合群", type: "零跑中心", staffReq: 11, potential: 124, drive: 27, schedule: 8 },
+  { store: "三亚体验中心迎宾路汽车城店", manager: "李博恩", group: "合群", type: "城市展厅", staffReq: 11, potential: 190, drive: 18, schedule: 17 },
+  { store: "海口零跑中心美安科技城店", manager: "李博恩", group: "铧丰", type: "零跑中心", staffReq: 10, potential: 230, drive: 47, schedule: 26 },
+  { store: "海口体验中心上邦百汇城店", manager: "李博恩", group: "铧丰", type: "商超", staffReq: 8, potential: 169, drive: 40, schedule: 38 },
+  { store: "海口零跑中心海盛路店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 8, potential: 192, drive: 17, schedule: 18 },
+  { store: "海口零跑中心南海大道店（销售）", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 17, potential: 460, drive: 81, schedule: 37 },
+  { store: "海口零跑中心南海大道东店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 17, potential: 505, drive: 77, schedule: 35 },
+  { store: "海口体验中心海甸城店", manager: "李博恩", group: "九兴", type: "商超", staffReq: 10, potential: 182, drive: 30, schedule: 17 },
+  { store: "海口体验中心海口东站店", manager: "李博恩", group: "九兴", type: "城市展厅", staffReq: 8, potential: 290, drive: 31, schedule: 34 },
+  { store: "海口零跑中心琼山大道店", manager: "李博恩", group: "正大", type: "零跑中心", staffReq: 14, potential: 380, drive: 65, schedule: 19 },
+  { store: "海口体验中心江东店", manager: "李博恩", group: "正大", type: "城市展厅", staffReq: 12, potential: 314, drive: 43, schedule: 25 },
+  { store: "梅州零跑中心剑英大道店", manager: "李稳", group: "骏诚", type: "零跑中心", staffReq: 9, potential: 185, drive: 33, schedule: 17 },
+  { store: "云浮体验中心环市中路店", manager: "李稳", group: "利生", type: "城市展厅", staffReq: 9, potential: 184, drive: 17, schedule: 19 },
+  { store: "潮州零跑中心潮汕路店", manager: "李稳", group: "荣通", type: "零跑中心", staffReq: 10, potential: 276, drive: 17, schedule: 28 },
+  { store: "揭阳零跑中心荣通汽车城店", manager: "李稳", group: "荣通", type: "零跑中心", staffReq: 10, potential: 419, drive: 44, schedule: 38 },
+  { store: "揭阳体验中心普宁万泰新天地商场店", manager: "李稳", group: "荣通", type: "商超", staffReq: 6, potential: 256, drive: 33, schedule: 41 },
+  { store: "深圳零跑中心宝运达汽车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 16, potential: 491, drive: 60, schedule: 55 },
+  { store: "深圳零跑中心光明车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 14, potential: 596, drive: 61, schedule: 66 },
+  { store: "深圳零跑中心万国城旗舰店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 12, potential: 391, drive: 46, schedule: 43 },
+  { store: "深圳零跑中心远望车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 14, potential: 474, drive: 36, schedule: 47 },
+  { store: "深圳体验中心杰鹏车城店", manager: "罗捷", group: "新易腾", type: "城市展厅", staffReq: 8, potential: 275, drive: 31, schedule: 37 },
+  { store: "深圳体验中心龙华中心店", manager: "罗捷", group: "新易腾", type: "城市展厅", staffReq: 10, potential: 478, drive: 37, schedule: 46 },
+  { store: "珠海零跑中心南屏珠海大道店", manager: "秦启超", group: "达田", type: "零跑中心", staffReq: 12, potential: 314, drive: 33, schedule: 10 },
+  { store: "珠海体验中心美满车城店", manager: "秦启超", group: "达田", type: "城市展厅", staffReq: 9, potential: 348, drive: 37, schedule: 13 },
+  { store: "中山零跑中心金宁汽车城店", manager: "秦启超", group: "金盈", type: "零跑中心", staffReq: 9, potential: 305, drive: 16, schedule: 15 },
+  { store: "中山零跑中心彩虹大道店", manager: "秦启超", group: "美轮", type: "零跑中心", staffReq: 13, potential: 382, drive: 44, schedule: 24 },
+  { store: "中山零跑中心中山六路店", manager: "秦启超", group: "美轮", type: "零跑中心", staffReq: 8, potential: 300, drive: 43, schedule: 13 },
+  { store: "中山体验中心港口店", manager: "秦启超", group: "美轮", type: "城市展厅", staffReq: 8, potential: 226, drive: 21, schedule: 12 },
+  { store: "珠海零跑中心上冲车城店", manager: "秦启超", group: "申裕", type: "零跑中心", staffReq: 14, potential: 370, drive: 96, schedule: 38 },
+  { store: "珠海体验中心西部车城店", manager: "秦启超", group: "申裕", type: "城市展厅", staffReq: 9, potential: 268, drive: 37, schedule: 15 },
+  { store: "中山零跑中心小榄菊城大道店", manager: "秦启超", group: "智盈", type: "零跑中心", staffReq: 13, potential: 332, drive: 48, schedule: 43 },
+  { store: "广州零跑中心白云大道店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 13, potential: 391, drive: 36, schedule: 38 },
+  { store: "广州零跑中心花都建设路店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 12, potential: 527, drive: 39, schedule: 29 },
+  { store: "广州体验中心广花路店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 6, potential: 255, drive: 19, schedule: 20 },
+  { store: "广州体验中心花都北站店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 158, drive: 10, schedule: 19 },
+  { store: "广州体验中心为正车城店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 226, drive: 31, schedule: 20 },
+  { store: "河源零跑中心河源大道店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 12, potential: 206, drive: 50, schedule: 73 },
+  { store: "河源体验中心坚基购物中心店", manager: "熊俊晖", group: "骏延", type: "商超", staffReq: 6, potential: 183, drive: 7, schedule: 28 },
+  { store: "清远零跑中心港鸿汽车城店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 10, potential: 256, drive: 37, schedule: 48 },
+  { store: "清远体验中心奇晟汽车城店", manager: "熊俊晖", group: "骏延", type: "城市展厅", staffReq: 7, potential: 207, drive: 27, schedule: 39 },
+  { store: "汕头零跑中心汕汾路店", manager: "熊俊晖", group: "骏延", type: "零跑中心", staffReq: 13, potential: 435, drive: 71, schedule: 94 },
+  { store: "汕头零跑中心金凤路店", manager: "熊俊晖", group: "亿海", type: "零跑中心", staffReq: 11, potential: 250, drive: 31, schedule: 46 },
+  { store: "汕头体验中心广汕路店", manager: "熊俊晖", group: "亿海", type: "城市展厅", staffReq: 6, potential: 162, drive: 33, schedule: 22 },
+  { store: "江门零跑中心建设路店", manager: "余子恩", group: "磐鼎", type: "零跑中心", staffReq: 12, potential: 241, drive: 53, schedule: 38 },
+  { store: "佛山零跑中心顺德大良车城店", manager: "余子恩", group: "未来智选", type: "零跑中心", staffReq: 18, potential: 560, drive: 58, schedule: 17 },
+  { store: "佛山体验中心北滘车城店", manager: "余子恩", group: "未来智选", type: "城市展厅", staffReq: 8, potential: 318, drive: 25, schedule: 44 },
+  { store: "佛山体验中心容桂车城店", manager: "余子恩", group: "未来智选", type: "城市展厅", staffReq: 8, potential: 262, drive: 18, schedule: 45 },
+  { store: "佛山零跑中心三水友好车城店", manager: "余子恩", group: "智迅", type: "零跑中心", staffReq: 17, potential: 584, drive: 50, schedule: 72 },
+  { store: "佛山体验中心高明荷香路店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 5, potential: 180, drive: 31, schedule: 23 },
+  { store: "佛山体验中心狮山汽车城店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 7, potential: 149, drive: 8, schedule: 20 },
+  { store: "江门零跑中心冈州大道店", manager: "余子恩", group: "智迅", type: "零跑中心", staffReq: 15, potential: 333, drive: 44, schedule: 20 },
+  { store: "江门体验中心开平车城店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 8, potential: 217, drive: 27, schedule: 20 },
+  { store: "江门体验中心蓬江华鸿店", manager: "余子恩", group: "智迅", type: "城市展厅", staffReq: 4, potential: 157, drive: 6, schedule: 16 },
+  { store: "佛山零跑中心海八路汽车城店", manager: "余子恩(代)", group: "华跃", type: "零跑中心", staffReq: 16, potential: 345, drive: 28, schedule: 44 },
+  { store: "佛山体验中心广佛汽车城店", manager: "余子恩(代)", group: "华跃", type: "城市展厅", staffReq: 6, potential: 238, drive: 3, schedule: 0 },
+  { store: "佛山体验中心海八西路店", manager: "余子恩(代)", group: "华跃", type: "城市展厅", staffReq: 8, potential: 285, drive: 43, schedule: 9 },
+  { store: "佛山零跑中心禅城国际汽车城店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 16, potential: 485, drive: 52, schedule: 60 },
+  { store: "佛山零跑中心桂澜路店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 8, potential: 287, drive: 3, schedule: 19 },
+  { store: "佛山零跑中心南庄汽车城店", manager: "余子恩(代)", group: "利泰", type: "零跑中心", staffReq: 13, potential: 425, drive: 23, schedule: 26 },
+  { store: "茂名零跑中心茂名大道店", manager: "庄文迪", group: "美轮", type: "零跑中心", staffReq: 13, potential: 359, drive: 38, schedule: 24 },
+  { store: "茂名体验中心茂水路店", manager: "庄文迪", group: "美轮", type: "城市展厅", staffReq: 5, potential: 228, drive: 26, schedule: 15 },
+  { store: "肇庆零跑中心肇庆大道店", manager: "庄文迪", group: "美轮", type: "零跑中心", staffReq: 13, potential: 470, drive: 54, schedule: 24 },
+  { store: "阳江零跑中心溢信汽车城店", manager: "庄文迪", group: "溢信", type: "零跑中心", staffReq: 10, potential: 235, drive: 25, schedule: 8 },
+  { store: "湛江零跑中心海田车城店", manager: "庄文迪", group: "源流", type: "零跑中心", staffReq: 13, potential: 568, drive: 31, schedule: 15 },
+  { store: "湛江体验中心瀚龙车城店", manager: "庄文迪", group: "源流", type: "城市展厅", staffReq: 6, potential: 279, drive: 28, schedule: 15 },
+  { store: "湛江体验中心粤西车城店", manager: "庄文迪", group: "源流", type: "城市展厅", staffReq: 6, potential: 245, drive: 25, schedule: 5 },
 ];
 
 // ---- 主表数据：按零售高级经理聚合（示例数据，匹配截图）----
@@ -447,6 +453,9 @@ const MAX_TRIAL_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / d.potenti
 // 周期天数：用于「试驾目标完成率 = 试驾量 ÷ (人数要求 × 天数)」。
 // 8.1–8.9 共9天；后续周度天数调整时（如下周7天）只需改这一个值。
 const PERIOD_DAYS = 9;
+
+// 排程目标 = 要求人数 × 排程天数。11 为当前变量值，用户后续若要调整只需改这一处，主表+门店表联动重算。
+const SCHEDULE_DAYS = 11;
 
 // 12个零售高级经理中最大的试驾目标完成率（用于单店试驾目标完成率得分的分母）
 // 用未舍入原始率，与上方主表得分口径一致
@@ -570,6 +579,19 @@ function renderMainTable() {
   const sortedMgrs = [...MANAGER_DATA].sort((a, b) => b.totalScore - a.totalScore);
   sortedMgrs.forEach((d, i) => { d.rank = i + 1; });
 
+  // 排程目标 / 排程数 / 排程目标完成率（新增三列）
+  // 排程目标 = 要求人数 × 排程天数(SCHEDULE_DAYS，变量)；排程数 = 下属门店排程数之和；完成率 = 排程数 ÷ 排程目标
+  const schedCountOf = {};
+  STORE_DATA.forEach(s => { schedCountOf[s.manager] = (schedCountOf[s.manager] || 0) + (s.schedule || 0); });
+  MANAGER_DATA.forEach(d => {
+    d.schedTarget = d.staffReq * SCHEDULE_DAYS;
+    d.schedCount  = schedCountOf[d.manager] || 0;
+    d.schedRate   = +(d.schedCount / d.schedTarget * 100).toFixed(2);
+  });
+  SUMMARY_ROW.schedTarget = SUMMARY_ROW.staffReq * SCHEDULE_DAYS;
+  SUMMARY_ROW.schedCount  = Object.values(schedCountOf).reduce((a, b) => a + b, 0);
+  SUMMARY_ROW.schedRate   = +(SUMMARY_ROW.schedCount / SUMMARY_ROW.schedTarget * 100).toFixed(2);
+
   let html = "";
 
   // 经理行（按综合得分降序：第1名→第12名）
@@ -594,6 +616,9 @@ function renderMainTable() {
       <td class="num-cell heat-cell"><span style="background:${gc.bg};color:${gc.txt}">${d.targetRate.toFixed(2)}%</span></td>
       <td class="num-cell">${fmt(d.targetScore, 2)}</td>
       <td class="num-cell">${fmt(d.totalScore, 2)}</td>
+      <td class="num-cell">${fmtInt(d.schedTarget)}</td>
+      <td class="num-cell">${fmtInt(d.schedCount)}</td>
+      <td class="num-cell">${fmt(d.schedRate, 2)}%</td>
       <td class="num-cell heat-cell"><span style="background:${rankColorMap[d.rank].bg};color:${rankColorMap[d.rank].txt}">${d.rank}</span></td>
     </tr>`;
   });
@@ -609,12 +634,15 @@ function renderMainTable() {
     <td class="num-cell"><span>${SUMMARY_ROW.targetRate.toFixed(2)}%</span></td>
     <td class="num-cell">${fmt(SUMMARY_ROW.targetScore, 2)}</td>
     <td class="num-cell">${fmt(SUMMARY_ROW.totalScore, 2)}</td>
+    <td class="num-cell">${fmtInt(SUMMARY_ROW.schedTarget)}</td>
+    <td class="num-cell">${fmtInt(SUMMARY_ROW.schedCount)}</td>
+    <td class="num-cell">${fmt(SUMMARY_ROW.schedRate, 2)}%</td>
     <td class="num-cell">-</td>
   </tr>`;
 
   // 华南下方的说明文字
-  html += `<tr class="note-row"><td colspan="10">1、各店人数要求为7月版本，本期试驾目标为9批/人</td></tr>`;
-  html += `<tr class="note-row"><td colspan="10">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
+  html += `<tr class="note-row"><td colspan="13">1、各店人数要求为7月版本，本期试驾目标为9批/人</td></tr>`;
+  html += `<tr class="note-row"><td colspan="13">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
 
   tbody.innerHTML = html;
 }
@@ -672,6 +700,9 @@ function filterStores() {
       <td class="num-cell">${storeTargetRate == null ? "-" : storeTargetRate.toFixed(2) + "%"}</td>
       <td class="num-cell">${targetScore == null ? "-" : targetScore.toFixed(2)}</td>
       <td class="num-cell">${storeTotalScore == null ? "-" : storeTotalScore.toFixed(2)}</td>
+      <td class="num-cell">${s.staffReq * SCHEDULE_DAYS}</td>
+      <td class="num-cell">${s.schedule == null ? "-" : s.schedule}</td>
+      <td class="num-cell">${s.staffReq ? (s.schedule / (s.staffReq * SCHEDULE_DAYS) * 100).toFixed(2) + "%" : "-"}</td>
     </tr>`;
   });
 
