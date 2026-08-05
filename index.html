@@ -82,6 +82,12 @@
   th.col-pct { min-width: 80px; }
   th.col-score { min-width: 70px; }
   th.col-rank { min-width: 60px; }
+  /* 排程三列表头：浅绿底黑字 */
+  #mainTable thead th.th-schedule {
+    background: #c8e6c9;
+    color: #1b1b1b;
+    font-weight: 600;
+  }
 
   /* ===== 主表：列宽统一收窄（仅主表，不影响下方门店表）===== */
   #mainTable {
@@ -261,9 +267,9 @@
       <th class="col-score">试驾目标<br>完成率得分</th>
       <th class="col-score">综合得分</th>
       <th class="col-rank">综合排名</th>
-      <th class="col-pct">排程<br>目标</th>
-      <th class="col-score">排程数</th>
-      <th class="col-pct">排程目标<br>完成率</th>
+      <th class="col-pct th-schedule">排程<br>目标</th>
+      <th class="col-score th-schedule">排程数</th>
+      <th class="col-pct th-schedule">排程目标<br>完成率</th>
     </tr>
   </thead>
   <tbody id="mainBody"></tbody>
