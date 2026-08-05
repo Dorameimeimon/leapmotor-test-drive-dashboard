@@ -15,14 +15,14 @@
   }
 
   /* ===== 主容器 ===== */
-  .container { max-width: 1600px; margin: 0 auto; }
+  .container { max-width: 1440px; margin: 0 auto; }
 
   /* ===== 表格卡片容器（白底圆角阴影，参考CFT样式）===== */
   .table-card {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    overflow: visible;
+    overflow: hidden;
     padding: 4px 0;
   }
 
@@ -93,14 +93,22 @@
   /* ===== 主表：列宽统一收窄（仅主表，不影响下方门店表）===== */
   #mainTable {
     table-layout: fixed;
-    width: 1520px;
+    width: 1400px;
     margin: 0 auto;
   }
   #mainTable th, #mainTable td {
-    width: auto;
     overflow: visible;
     text-overflow: initial;
   }
+  /* 右侧4列压缩宽度（锁单+排程三列） */
+  #mainTable thead th:nth-last-child(4),
+  #mainTable thead th:nth-last-child(3),
+  #mainTable thead th:nth-last-child(2),
+  #mainTable thead th:nth-last-child(1),
+  #mainTable tbody td:nth-last-child(4),
+  #mainTable tbody td:nth-last-child(3),
+  #mainTable tbody td:nth-last-child(2),
+  #mainTable tbody td:nth-last-child(1) { width: 80px; }
 
   /* ===== 数据行：无框线 + 斑马纹 ===== */
   tbody tr:nth-child(even) { background: #f7f8fa; }
