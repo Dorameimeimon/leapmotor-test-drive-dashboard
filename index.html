@@ -93,7 +93,7 @@
   /* ===== 主表：列宽统一收窄（仅主表，不影响下方门店表）===== */
   #mainTable {
     table-layout: fixed;
-    width: 1300px;
+    width: 1400px;
     margin: 0 auto;
   }
   #mainTable th, #mainTable td {
@@ -268,6 +268,7 @@
       <th class="col-score">试驾目标<br>完成率得分</th>
       <th class="col-score">综合得分</th>
       <th class="col-rank">综合排名</th>
+      <th class="col-pct">月累锁单<br>完成率</th>
       <th class="col-pct th-schedule">排程<br>目标</th>
       <th class="col-score th-schedule">排程数</th>
       <th class="col-pct th-schedule">排程目标<br>完成率</th>
@@ -464,6 +465,25 @@ const PERIOD_DAYS = 9;
 // 排程目标 = 要求人数 × 排程天数。11 为当前变量值，用户后续若要调整只需改这一处，主表+门店表联动重算。
 const SCHEDULE_DAYS = 11;
 
+// ---- 月累锁单完成率数据（净增锁单目标 / 净增锁单）----
+// 数据来源：管理报表，后续更新时用户会提供新截图/Excel
+const LOCK_ORDER_DATA = {
+  "余子恩":     { target: 899,  actual: 83 },
+  "余子恩(代)": { target: 623,  actual: 55 },
+  "庄文迪":     { target: 704,  actual: 64 },
+  "方任昊":     { target: 1047, actual: 81 },
+  "李博恩":     { target: 1341, actual: 118 },
+  "李稳":       { target: 416,  actual: 33 },
+  "熊俊晖":     { target: 971,  actual: 102 },
+  "秦启超":     { target: 786,  actual: 64 },
+  "罗捷":       { target: 616,  actual: 70 },
+  "胡浩":       { target: 841,  actual: 78 },
+  "贾迪赫":     { target: 583,  actual: 50 },
+  "黄伟峰":     { target: 1365, actual: 142 },
+};
+// 华南总计
+const LOCK_ORDER_SOUTH = { target: 10192, actual: 940 };
+
 // 12个零售高级经理中最大的试驾目标完成率（用于单店试驾目标完成率得分的分母）
 // 用未舍入原始率，与上方主表得分口径一致
 const MAX_TARGET_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / (d.staffReq * PERIOD_DAYS) * 100));
@@ -599,6 +619,20 @@ function renderMainTable() {
   SUMMARY_ROW.schedCount  = Object.values(schedCountOf).reduce((a, b) => a + b, 0);
   SUMMARY_ROW.schedRate   = +(SUMMARY_ROW.schedCount / SUMMARY_ROW.schedTarget * 100).toFixed(2);
 
+  // 月累锁单完成率 = 净增锁单 ÷ 净增锁单目标 × 100%，保留1位小数
+  MANAGER_DATA.forEach(d => {
+    const lo = LOCK_ORDER_DATA[d.manager];
+    d.lockRate = lo ? +(lo.actual / lo.target * 100).toFixed(1) : null;
+  });
+  SUMMARY_ROW.lockRate = +(LOCK_ORDER_SOUTH.actual / LOCK_ORDER_SOUTH.target * 100).toFixed(1);
+  // 找出完成率最低的3人（用于浅红热力图标记）
+  const bottom3 = [...MANAGER_DATA]
+    .filter(d => d.lockRate !== null)
+    .sort((a, b) => a.lockRate - b.lockRate)
+    .slice(0, 3)
+    .map(d => d.manager);
+  const lockBottom3Set = new Set(bottom3);
+
   let html = "";
 
   // 经理行（按综合得分降序：第1名→第12名）
@@ -624,6 +658,7 @@ function renderMainTable() {
       <td class="num-cell">${fmt(d.targetScore, 2)}</td>
       <td class="num-cell">${fmt(d.totalScore, 2)}</td>
       <td class="num-cell heat-cell"><span style="background:${rankColorMap[d.rank].bg};color:${rankColorMap[d.rank].txt}">${d.rank}</span></td>
+      <td class="num-cell"${lockBottom3Set.has(d.manager) ? ' style="background:#ffcdd2;color:#c62828;font-weight:600"' : ''}>${d.lockRate !== null ? d.lockRate.toFixed(1) + '%' : '-'}</td>
       <td class="num-cell">${fmtInt(d.schedTarget)}</td>
       <td class="num-cell">${fmtInt(d.schedCount)}</td>
       <td class="num-cell">${fmt(d.schedRate, 2)}%</td>
@@ -642,14 +677,15 @@ function renderMainTable() {
     <td class="num-cell">${fmt(SUMMARY_ROW.targetScore, 2)}</td>
       <td class="num-cell">${fmt(SUMMARY_ROW.totalScore, 2)}</td>
       <td class="num-cell">-</td>
+      <td class="num-cell">${SUMMARY_ROW.lockRate.toFixed(1)}%</td>
       <td class="num-cell">${fmtInt(SUMMARY_ROW.schedTarget)}</td>
       <td class="num-cell">${fmtInt(SUMMARY_ROW.schedCount)}</td>
       <td class="num-cell">${fmt(SUMMARY_ROW.schedRate, 2)}%</td>
     </tr>`;
 
   // 华南下方的说明文字
-  html += `<tr class="note-row"><td colspan="13">1、各店人数要求为7月版本，本期试驾目标为9批/人</td></tr>`;
-  html += `<tr class="note-row"><td colspan="13">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
+  html += `<tr class="note-row"><td colspan="14">1、各店人数要求为7月版本，本期试驾目标为9批/人</td></tr>`;
+  html += `<tr class="note-row"><td colspan="14">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
 
   tbody.innerHTML = html;
 }
