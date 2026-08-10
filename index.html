@@ -266,7 +266,7 @@
   <h1>华南试驾勤奋度看板<span class="dash-date" id="dashDate"></span></h1>
 </div>
 <div class="time-row">
-  <span><span class="time-label">时间维度：</span><span class="time-value">周度（8.1–8.9）</span></span>
+  <span><span class="time-label">时间维度：</span><span class="time-value">周度（8.10–8.16）</span></span>
 </div>
 
 <table id="mainTable">
@@ -477,7 +477,7 @@ const SUMMARY_ROW = {
 const MAX_TRIAL_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / d.potential * 100));
 
 // 周期天数：用于「试驾目标完成率 = 试驾量 ÷ (人数要求 × 天数)」。
-// 8.1–8.9 共9天；后续周度天数调整时（如下周7天）只需改这一个值。
+// 8.10–8.16 共7天；后续周度天数调整时只需改这一个值。
 const PERIOD_DAYS = 9;
 
 // 排程目标 = 要求人数 × 排程天数。11 为当前变量值，用户后续若要调整只需改这一处，主表+门店表联动重算。
