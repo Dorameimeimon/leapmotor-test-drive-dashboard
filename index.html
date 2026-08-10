@@ -728,11 +728,11 @@ function renderMainTable() {
 // 渲染子片区门店明细（单表连续 + 经理下拉筛选）
 // ============================================================
 function renderStoreGroups() {
-  // 填充下拉选项（按主表经理顺序 + 其余经理）
+  // 填充下拉选项（按门店明细表中首次出现顺序）
   const sel = document.getElementById("managerFilter");
-  const managerOrder = [...MANAGER_DATA.map(d => d.manager)];
-  [...new Set(STORE_DATA.map(s => s.manager))].forEach(m => {
-    if (!managerOrder.includes(m)) managerOrder.push(m);
+  const managerOrder = [];
+  STORE_DATA.forEach(s => {
+    if (!managerOrder.includes(s.manager)) managerOrder.push(s.manager);
   });
   managerOrder.forEach(m => {
     const opt = document.createElement("option");
