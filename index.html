@@ -478,10 +478,10 @@ const MAX_TRIAL_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / d.potenti
 
 // 周期天数：用于「试驾目标完成率 = 试驾量 ÷ (人数要求 × 天数)」。
 // 8.10–8.16 共7天；后续周度天数调整时只需改这一个值。
-const PERIOD_DAYS = 9;
+const PERIOD_DAYS = 7;
 
-// 排程目标 = 要求人数 × 排程天数。11 为当前变量值，用户后续若要调整只需改这一处，主表+门店表联动重算。
-const SCHEDULE_DAYS = 11;
+// 排程目标 = 要求人数 × 排程天数。9 为当前变量值（8.10–8.16：5工作日×1+2周末×2=9），用户后续若要调整只需改这一处，主表+门店表联动重算。
+const SCHEDULE_DAYS = 9;
 
 // ---- 月累锁单完成率数据（净增锁单目标 / 净增锁单）----
 // 数据来源：管理报表，后续更新时用户会提供新截图/Excel
@@ -718,7 +718,7 @@ function renderMainTable() {
     </tr>`;
 
   // 华南下方的说明文字
-  html += `<tr class="note-row"><td colspan="16">1、各店人数要求为7月版本，本期试驾目标为9批/人，排程目标为11批/人（即工作日1批/人，周末2批/人）</td></tr>`;
+  html += `<tr class="note-row"><td colspan="16">1、各店人数要求为8月版本，本期试驾目标为7批/人，排程目标为9批/人（即工作日1批/人，周末2批/人）</td></tr>`;
   html += `<tr class="note-row"><td colspan="16">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
 
   tbody.innerHTML = html;
