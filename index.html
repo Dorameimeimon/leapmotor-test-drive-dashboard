@@ -26,6 +26,11 @@
     overflow: hidden;
     padding: 4px 0;
   }
+  .main-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
 
   /* ===== 标题区（在白底卡片内）===== */
   .header {
@@ -277,6 +282,7 @@
   <span><span class="time-label">时间维度：</span><span class="time-value">周度（8.10–8.16）</span></span>
 </div>
 
+<div class="main-table-scroll">
 <table id="mainTable">
   <thead>
     <tr>
@@ -300,6 +306,7 @@
   </thead>
   <tbody id="mainBody"></tbody>
 </table>
+</div>
 </div>
 
 <!-- ==================== 子片区：门店明细 ==================== -->
