@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260811-2150">
+<meta name="version" content="20260811-2200">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -16,7 +16,7 @@
   }
 
   /* ===== 主容器 ===== */
-  .container { max-width: 1560px; margin: 0 auto; }
+  .container { max-width: 1340px; margin: 0 auto; }
 
   /* ===== 表格卡片容器（白底圆角阴影，参考CFT样式）===== */
   .table-card {
@@ -88,10 +88,10 @@
     padding: 10px 6px;
     font-size: 13px;
   }
-  th.col-manager { min-width: 90px; }
-  th.col-pct { min-width: 80px; }
-  th.col-score { min-width: 70px; }
-  th.col-rank { min-width: 60px; }
+  th.col-manager { min-width: auto; }
+  th.col-pct { min-width: auto; }
+  th.col-score { min-width: auto; }
+  th.col-rank { min-width: auto; }
   /* 排程三列表头：浅绿底黑字（主表+门店表通用） */
   #mainTable thead th.th-schedule,
   #storeTable thead th.th-schedule {
@@ -100,29 +100,16 @@
     font-weight: 600;
   }
 
-  /* ===== 主表：列宽统一收窄（仅主表，不影响下方门店表）===== */
+  /* ===== 主表：16列等宽，统一收窄 ===== */
   #mainTable {
     table-layout: fixed;
-    width: 1520px;
+    width: 1280px;
     margin: 0;
   }
   #mainTable th, #mainTable td {
     overflow: visible;
     text-overflow: initial;
   }
-  /* 右侧6列宽度：锁单完成率 / 排程目标 / 排程数 / 排程完成率 / 核销数 / 核销率 */
-  #mainTable thead th:nth-last-child(6) { width: 75px; }   /* 月累锁单完成率 */
-  #mainTable thead th:nth-last-child(5) { width: 75px; }   /* 排程目标 */
-  #mainTable thead th:nth-last-child(4) { width: 85px; }   /* 排程数 */
-  #mainTable thead th:nth-last-child(3) { width: 100px; }  /* 排程目标完成率 */
-  #mainTable thead th:nth-last-child(2) { width: 85px; }   /* 排程核销数 */
-  #mainTable thead th:nth-last-child(1) { width: 100px; }  /* 排程核销率 */
-  #mainTable tbody td:nth-last-child(6) { width: 75px; }
-  #mainTable tbody td:nth-last-child(5) { width: 75px; }
-  #mainTable tbody td:nth-last-child(4) { width: 85px; }
-  #mainTable tbody td:nth-last-child(3) { width: 100px; }
-  #mainTable tbody td:nth-last-child(2) { width: 85px; }
-  #mainTable tbody td:nth-last-child(1) { width: 100px; }
 
   /* ===== 数据行：无框线 + 斑马纹 ===== */
   tbody tr:nth-child(even) { background: #f7f8fa; }
