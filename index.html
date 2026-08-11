@@ -133,6 +133,15 @@
     padding: 4px 8px;
     border-top: 1px solid #eee;
   }
+  tbody tr.review-row td {
+    background: #fff;
+    color: #d32f2f;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: left;
+    padding: 4px 8px;
+    border-top: 1px solid #eee;
+  }
 
   /* ===== 热力图标色：12小区以华南为界，连续渐变（每人一色）=====
      高于华南：绿系，数值越大越深绿（最大最深 → 最接近华南最浅）
@@ -721,6 +730,9 @@ function renderMainTable() {
   // 华南下方的说明文字
   html += `<tr class="note-row"><td colspan="16">1、各店人数要求为8月版本，本期试驾目标为7批/人，排程目标为9批/人（即工作日1批/人，周末2批/人）</td></tr>`;
   html += `<tr class="note-row"><td colspan="16">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
+  html += `<tr class="review-row"><td colspan="16">复盘机制：</td></tr>`;
+  html += `<tr class="review-row"><td colspan="16">1、潜客试驾率到周三还持续低于10%，对应小区要向大区复盘</td></tr>`;
+  html += `<tr class="review-row"><td colspan="16">2、周度定单后三且潜客试驾率在后六向大区进行书面复盘</td></tr>`;
 
   tbody.innerHTML = html;
 }
