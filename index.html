@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260813-1103">
+<meta name="version" content="20260813-1250">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -761,8 +761,19 @@ function filterStores() {
     ? STORE_DATA.filter(s => s.manager === selected)
     : STORE_DATA;
 
-  let html = "";
+  // 门店综合得分热力图：以华南汇总综合得分为界，高于绿、低于红
   const targetDenom = MAX_TARGET_RATE > 100 ? 100 : MAX_TARGET_RATE;
+  const allStoreScores = STORE_DATA.map(s => {
+    const trr = s.potential && s.drive != null ? (s.drive / s.potential * 100) : null;
+    const ts = trr != null ? +(trr / MAX_TRIAL_RATE * 100).toFixed(2) : null;
+    const tgr = s.staffReq ? (s.drive / (s.staffReq * PERIOD_DAYS) * 100) : null;
+    const tgs = tgr != null ? +(tgr / targetDenom * 100).toFixed(2) : null;
+    const tot = (ts != null && tgs != null) ? +(ts * 0.5 + tgs * 0.5).toFixed(2) : null;
+    return { k: s.store, v: tot };
+  }).filter(o => o.v != null);
+  const storeTotalScoreColorMap = buildContinuousMap(allStoreScores, SUMMARY_ROW.totalScore);
+
+  let html = "";
   rows.forEach(s => {
     const storeTrialRateRaw = s.potential && s.drive != null ? (s.drive / s.potential * 100) : null;
     const storeTrialRate = storeTrialRateRaw != null ? +storeTrialRateRaw.toFixed(2) : null;
@@ -771,6 +782,7 @@ function filterStores() {
     const storeTargetRate = storeTargetRateRaw != null ? +storeTargetRateRaw.toFixed(2) : null;
     const targetScore = storeTargetRateRaw != null ? +((storeTargetRateRaw / targetDenom) * 100).toFixed(2) : null;
     const storeTotalScore = (trialScore != null && targetScore != null) ? +(trialScore * 0.5 + targetScore * 0.5).toFixed(2) : null;
+    const tsColor = storeTotalScoreColorMap[s.store] || { bg: "#eeeeee", txt: "#333" };
     html += `<tr>
       <td style="text-align:center;padding-left:8px;white-space:nowrap;">${s.store}</td>
       <td>${s.manager}</td>
@@ -783,7 +795,7 @@ function filterStores() {
       <td class="num-cell">${trialScore == null ? "-" : trialScore.toFixed(2)}</td>
       <td class="num-cell">${storeTargetRate == null ? "-" : storeTargetRate.toFixed(2) + "%"}</td>
       <td class="num-cell">${targetScore == null ? "-" : targetScore.toFixed(2)}</td>
-      <td class="num-cell">${storeTotalScore == null ? "-" : storeTotalScore.toFixed(2)}</td>
+      <td class="num-cell heat-cell"><span style="background:${tsColor.bg};color:${tsColor.txt}">${storeTotalScore == null ? "-" : storeTotalScore.toFixed(2)}</span></td>
       <td class="num-cell">${s.staffReq * SCHEDULE_DAYS}</td>
       <td class="num-cell">${s.schedule == null ? "-" : s.schedule}</td>
       <td class="num-cell">${s.staffReq ? (s.schedule / (s.staffReq * SCHEDULE_DAYS) * 100).toFixed(2) + "%" : "-"}</td>
