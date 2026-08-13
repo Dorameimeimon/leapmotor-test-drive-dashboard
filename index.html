@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260813-1637">
+<meta name="version" content="20260813-1655">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -16,7 +16,7 @@
   }
 
   /* ===== 主容器 ===== */
-  .container { max-width: 1240px; margin: 0 auto; }
+  .container { max-width: 1440px; margin: 0 auto; }
 
   /* ===== 表格卡片容器（白底圆角阴影，参考CFT样式）===== */
   .table-card {
@@ -147,7 +147,7 @@
   }
   /* 华南汇总行：中性底色（基准分界线）*/
   td.num-cell.heat-neutral > span {
-    display:inline-block; min-width:52px; padding:1px 6px; border-radius:10px; line-height:1.5; font-weight:700; font-size:12.5px;
+    display:inline-block; min-width:56px; padding:2px 8px; border-radius:12px; line-height:1.55; font-weight:700;
     background:#eeeeee; color:#555; border:1px dashed #b0b0b0;
   }
 
@@ -218,7 +218,7 @@
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
-    width: 1200px;
+    width: 1400px;
   }
   .sub-table-wrap table th, .sub-table-wrap table td {
     border: none;
@@ -227,8 +227,9 @@
     background: #1b4332;
     color: #fff;
     font-size: 13px;
-    padding: 10px 4px;
+    padding: 10px 5px;
     font-weight: 600;
+    white-space: nowrap;
   }
   .sub-table-wrap table td {
     font-size: 13px;
@@ -239,30 +240,30 @@
   .sub-table-wrap table tbody tr:nth-child(even) { background: #f7f8fa; }
   .sub-table-wrap table tbody tr:nth-child(odd) { background: #fff; }
 
-  /* 门店表17列固定列宽（总宽1200px, 一屏内不横拉） */
-  #storeTable th:nth-child(1)  { width: 185px; }  /* 门店名称 */
-  #storeTable th:nth-child(2)  { width: 80px; }   /* 零售高级经理 */
-  #storeTable th:nth-child(3)  { width: 42px; }   /* 集团 */
-  #storeTable th:nth-child(4)  { width: 56px; }   /* 门店类型 */
-  #storeTable th:nth-child(5)  { width: 46px; }   /* 人数要求 */
-  #storeTable th:nth-child(6)  { width: 58px; }   /* 潜客数 */
-  #storeTable th:nth-child(7)  { width: 44px; }   /* 试驾量 */
-  #storeTable th:nth-child(8)  { width: 60px; }   /* 潜客试驾率 */
-  #storeTable th:nth-child(9)  { width: 48px; }   /* 率得分 */
-  #storeTable th:nth-child(10) { width: 62px; }   /* 试驾目标完成率 */
-  #storeTable th:nth-child(11) { width: 58px; }   /* 完成率得分 */
-  #storeTable th:nth-child(12) { width: 72px; }   /* 综合得分（需容纳药丸） */
-  #storeTable th:nth-child(13) { width: 56px; }   /* 排程目标 */
-  #storeTable th:nth-child(14) { width: 46px; }   /* 排程数 */
-  #storeTable th:nth-child(15) { width: 66px; }   /* 排程完成率 */
-  #storeTable th:nth-child(16) { width: 54px; }   /* 核销数 */
-  #storeTable th:nth-child(17) { width: 66px; }   /* 核销率 */
+  /* 门店表17列固定列宽（总宽1400px，确保文字不重叠） */
+  #storeTable th:nth-child(1)  { width: 195px; }  /* 门店名称 */
+  #storeTable th:nth-child(2)  { width: 88px; }   /* 零售高级经理 */
+  #storeTable th:nth-child(3)  { width: 44px; }   /* 集团 */
+  #storeTable th:nth-child(4)  { width: 62px; }   /* 门店类型 */
+  #storeTable th:nth-child(5)  { width: 54px; }   /* 人数要求 */
+  #storeTable th:nth-child(6)  { width: 70px; }   /* 潜客数 */
+  #storeTable th:nth-child(7)  { width: 48px; }   /* 试驾量 */
+  #storeTable th:nth-child(8)  { width: 66px; }   /* 潜客试驾率 */
+  #storeTable th:nth-child(9)  { width: 58px; }   /* 率得分 */
+  #storeTable th:nth-child(10) { width: 76px; }   /* 试驾目标完成率 */
+  #storeTable th:nth-child(11) { width: 70px; }   /* 完成率得分 */
+  #storeTable th:nth-child(12) { width: 78px; }   /* 综合得分（容纳药丸） */
+  #storeTable th:nth-child(13) { width: 60px; }   /* 排程目标 */
+  #storeTable th:nth-child(14) { width: 50px; }   /* 排程数 */
+  #storeTable th:nth-child(15) { width: 76px; }   /* 排程完成率 */
+  #storeTable th:nth-child(16) { width: 62px; }   /* 核销数 */
+  #storeTable th:nth-child(17) { width: 70px; }   /* 核销率 */
   /* 门店名列左对齐 */
   #storeTable td:nth-child(1) { text-align: left; padding-left: 8px; }
 
-  /* 药丸缩小适配窄列 */
+  /* 药丸样式 */
   td.num-cell.heat-cell > span {
-    display:inline-block; min-width:52px; padding:1px 6px; border-radius:10px; line-height:1.5; font-weight:700; font-size:12.5px;
+    display:inline-block; min-width:56px; padding:2px 8px; border-radius:12px; line-height:1.55; font-weight:700;
   }
 
   /* 经理分组标签 */
