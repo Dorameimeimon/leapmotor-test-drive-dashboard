@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260813-1250">
+<meta name="version" content="20260813-1540">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -237,6 +237,18 @@
   }
   .sub-table-wrap table tbody tr:nth-child(even) { background: #f7f8fa; }
   .sub-table-wrap table tbody tr:nth-child(odd) { background: #fff; }
+
+  /* 门店表右侧5列（排程目标~排程核销率）等宽 */
+  #storeTable thead th:nth-last-child(5),
+  #storeTable thead th:nth-last-child(4),
+  #storeTable thead th:nth-last-child(3),
+  #storeTable thead th:nth-last-child(2),
+  #storeTable thead th:nth-last-child(1) { width: 80px; }
+  #storeTable tbody td:nth-last-child(5),
+  #storeTable tbody td:nth-last-child(4),
+  #storeTable tbody td:nth-last-child(3),
+  #storeTable tbody td:nth-last-child(2),
+  #storeTable tbody td:nth-last-child(1) { width: 80px; }
 
   /* 经理分组标签 */
   .group-tag {
