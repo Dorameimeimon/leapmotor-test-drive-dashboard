@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260901-1826">
+<meta name="version" content="20260903-1032">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -389,12 +389,12 @@ const STORE_DATA = [
   { store: "东莞零跑中心长安振安东路店", manager: "方任昊", group: "一维", type: "零跑中心", staffReq: 9, potential: 973, drive: 36, schedule: 34, verify: 10 },
   { store: "东莞体验中心大岭山镇店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 6, potential: 721, drive: 41, schedule: 35, verify: 13 },
   { store: "东莞体验中心厚街店", manager: "方任昊", group: "一维", type: "城市展厅", staffReq: 8, potential: 784, drive: 30, schedule: 36, verify: 7 },
-  { store: "佛山零跑中心海八路汽车城店", manager: "何佳欢", group: "华跃", type: "零跑中心", staffReq: 15, potential: 1242, drive: 96, schedule: 122, verify: 42 },
-  { store: "佛山体验中心广佛汽车城店", manager: "何佳欢", group: "华跃", type: "城市展厅", staffReq: 5, potential: 329, drive: 11, schedule: 15, verify: 7 },
-  { store: "佛山体验中心海八西路店", manager: "何佳欢", group: "华跃", type: "城市展厅", staffReq: 10, potential: 518, drive: 55, schedule: 76, verify: 25 },
-  { store: "佛山零跑中心禅城国际汽车城店", manager: "何佳欢", group: "利泰", type: "零跑中心", staffReq: 16, potential: 895, drive: 122, schedule: 102, verify: 25 },
-  { store: "佛山零跑中心桂澜路店", manager: "何佳欢", group: "利泰", type: "零跑中心", staffReq: 8, potential: 359, drive: 45, schedule: 48, verify: 14 },
-  { store: "佛山零跑中心南庄汽车城店", manager: "何佳欢", group: "利泰", type: "零跑中心", staffReq: 13, potential: 930, drive: 70, schedule: 116, verify: 21 },
+  { store: "佛山零跑中心海八路汽车城店", manager: "余子恩", group: "华跃", type: "零跑中心", staffReq: 15, potential: 1242, drive: 96, schedule: 122, verify: 42 },
+  { store: "佛山体验中心广佛汽车城店", manager: "余子恩", group: "华跃", type: "城市展厅", staffReq: 5, potential: 329, drive: 11, schedule: 15, verify: 7 },
+  { store: "佛山体验中心海八西路店", manager: "余子恩", group: "华跃", type: "城市展厅", staffReq: 10, potential: 518, drive: 55, schedule: 76, verify: 25 },
+  { store: "佛山零跑中心禅城国际汽车城店", manager: "余子恩", group: "利泰", type: "零跑中心", staffReq: 16, potential: 895, drive: 122, schedule: 102, verify: 25 },
+  { store: "佛山零跑中心桂澜路店", manager: "余子恩", group: "利泰", type: "零跑中心", staffReq: 8, potential: 359, drive: 45, schedule: 48, verify: 14 },
+  { store: "佛山零跑中心南庄汽车城店", manager: "余子恩", group: "利泰", type: "零跑中心", staffReq: 13, potential: 930, drive: 70, schedule: 116, verify: 21 },
   { store: "惠州零跑中心金山汽车城店", manager: "胡浩", group: "新零致", type: "零跑中心", staffReq: 19, potential: 1018, drive: 144, schedule: 141, verify: 36 },
   { store: "惠州体验中心惠阳大道店", manager: "胡浩", group: "新零致", type: "城市展厅", staffReq: 8, potential: 655, drive: 26, schedule: 39, verify: 9 },
   { store: "惠州零跑中心惠南汽车城店", manager: "胡浩", group: "一维", type: "零跑中心", staffReq: 18, potential: 1047, drive: 129, schedule: 120, verify: 30 },
@@ -485,7 +485,7 @@ const STORE_DATA = [
 // ---- 主表数据：按零售高级经理聚合（示例数据，匹配截图）----
 const MANAGER_DATA = [
   { manager: "方任昊", staffReq: 106, potential: 8379, testDrive: 642, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
-  { manager: "何佳欢", staffReq: 67, potential: 4273, testDrive: 399, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
+  { manager: "余子恩", staffReq: 169, potential: 11164, testDrive: 1006, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "胡浩", staffReq: 90, potential: 5932, testDrive: 604, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "黄伟峰", staffReq: 144, potential: 11067, testDrive: 1106, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "贾迪赫", staffReq: 69, potential: 5369, testDrive: 502, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
@@ -494,7 +494,6 @@ const MANAGER_DATA = [
   { manager: "秦启超", staffReq: 98, potential: 5847, testDrive: 495, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "熊俊晖", staffReq: 110, potential: 8326, testDrive: 756, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "熊俊晖(代)", staffReq: 35, potential: 2431, testDrive: 200, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
-  { manager: "余子恩", staffReq: 102, potential: 6891, testDrive: 607, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "庄文迪", staffReq: 72, potential: 5280, testDrive: 539, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
 ];
 
