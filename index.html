@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260914-0942">
+<meta name="version" content="20260914-0951">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -406,14 +406,14 @@ const STORE_DATA = [
   { store: "广州零跑中心科学城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 16, potential: 1366, drive: 99, schedule: 63, verify: 46 },
   { store: "广州零跑中心新塘汽车城店", manager: "黄伟峰", group: "凌跑商贸", type: "零跑中心", staffReq: 17, potential: 1178, drive: 109, schedule: 115, verify: 78 },
   { store: "广州体验中心白云机场路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 1133, drive: 111, schedule: 61, verify: 42 },
-  { store: "广州体验中心番禺大道店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 16, potential: 1125, drive: 96, schedule: 105, verify: 81 },
+  { store: "广州体验中心番禺大道店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 14, potential: 1125, drive: 96, schedule: 105, verify: 81 },
   { store: "广州体验中心天河广汕路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 946, drive: 75, schedule: 73, verify: 45 },
   { store: "广州体验中心天河汇彩路店", manager: "黄伟峰", group: "凌跑商贸", type: "城市展厅", staffReq: 13, potential: 926, drive: 76, schedule: 84, verify: 60 },
   { store: "广州体验中心增城店", manager: "黄伟峰", group: "凌跑商贸", type: "卫星店", staffReq: 6, potential: 551, drive: 83, schedule: 64, verify: 45 },
   { store: "广州零跑中心沥滘海心沙店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 14, potential: 913, drive: 84, schedule: 69, verify: 29 },
   { store: "广州零跑中心美轮汽车园店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 10, potential: 733, drive: 51, schedule: 27, verify: 10 },
   { store: "广州零跑中心亚运大道店", manager: "黄伟峰", group: "美轮", type: "零跑中心", staffReq: 15, potential: 947, drive: 76, schedule: 60, verify: 29 },
-  { store: "广州体验中心番禺大北路店", manager: "黄伟峰", group: "美轮", type: "城市展厅", staffReq: 6, potential: 437, drive: 63, schedule: 27, verify: 12 },
+  { store: "广州体验中心番禺大北路店", manager: "黄伟峰", group: "美轮", type: "城市展厅", staffReq: 8, potential: 437, drive: 63, schedule: 27, verify: 12 },
   { store: "广州零跑中心金马汽车城店", manager: "黄伟峰", group: "沃之瑞", type: "零跑中心", staffReq: 11, potential: 708, drive: 55, schedule: 62, verify: 22 },
   { store: "深圳零跑中心芙蓉路店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 12, potential: 659, drive: 40, schedule: 38, verify: 28 },
   { store: "深圳零跑中心南山嘉进隆店", manager: "贾迪赫", group: "标特", type: "零跑中心", staffReq: 16, potential: 1048, drive: 83, schedule: 59, verify: 32 },
@@ -429,7 +429,7 @@ const STORE_DATA = [
   { store: "海口零跑中心南海大道店（销售）", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 16, potential: 1110, drive: 58, schedule: 146, verify: 32 },
   { store: "海口零跑中心南海大道东店", manager: "李博恩", group: "九兴", type: "零跑中心", staffReq: 16, potential: 1234, drive: 72, schedule: 119, verify: 50 },
   { store: "海口体验中心海甸城店", manager: "李博恩", group: "九兴", type: "商超", staffReq: 9, potential: 618, drive: 22, schedule: 45, verify: 12 },
-  { store: "海口体验中心海口东站店", manager: "李博恩", group: "九兴", type: "城市展厅", staffReq: 8, potential: 715, drive: 19, schedule: 89, verify: 26 },
+  { store: "海口体验中心海口东站店", manager: "李博恩", group: "九兴", type: "城市展厅", staffReq: 10, potential: 715, drive: 19, schedule: 89, verify: 26 },
   { store: "海口零跑中心琼山大道店", manager: "李博恩", group: "正大", type: "零跑中心", staffReq: 14, potential: 1084, drive: 63, schedule: 68, verify: 26 },
   { store: "海口体验中心江东店", manager: "李博恩", group: "正大", type: "城市展厅", staffReq: 12, potential: 776, drive: 59, schedule: 64, verify: 31 },
   { store: "深圳零跑中心宝运达汽车城店", manager: "罗捷", group: "新易腾", type: "零跑中心", staffReq: 16, potential: 1154, drive: 77, schedule: 100, verify: 48 },
@@ -490,7 +490,7 @@ const MANAGER_DATA = [
   { manager: "胡浩", staffReq: 90, potential: 5337, testDrive: 531, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "黄伟峰", staffReq: 150, potential: 10963, testDrive: 978, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "贾迪赫", staffReq: 69, potential: 4399, testDrive: 371, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
-  { manager: "李博恩", staffReq: 121, potential: 8371, testDrive: 496, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
+  { manager: "李博恩", staffReq: 123, potential: 8371, testDrive: 496, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "罗捷", staffReq: 74, potential: 5646, testDrive: 381, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "秦启超", staffReq: 98, potential: 5760, testDrive: 553, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
   { manager: "熊俊晖", staffReq: 110, potential: 8287, testDrive: 713, trialRate: 0, trialScore: 0, targetRate: 0, targetScore: 0, totalScore: 0, rank: 0 },
@@ -501,7 +501,7 @@ const MANAGER_DATA = [
 // 华南汇总行
 const SUMMARY_ROW = {
   manager: "华南",
-  staffReq: 1094,
+  staffReq: 1096,
   potential: 74853,
   testDrive: 6075,
   trialRate: 0, trialScore: null, targetRate: null, targetScore: null, totalScore: null, rank: null
