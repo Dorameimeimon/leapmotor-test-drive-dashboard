@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20260915-1112">
+<meta name="version" content="20260915-1746">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -292,7 +292,7 @@
   <h1>华南试驾勤奋度看板<span class="dash-date" id="dashDate"></span></h1>
 </div>
 <div class="time-row">
-  <span><span class="time-label">时间维度：</span><span class="time-value">周度（9.14–9.20）</span></span>
+  <span><span class="time-label">时间维度：</span><span class="time-value">月累（9.1–9.14）</span></span>
 </div>
 
 <div class="main-table-scroll">
@@ -504,11 +504,11 @@ const SUMMARY_ROW = {
 const MAX_TRIAL_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / d.potential * 100));
 
 // 周期天数：用于「试驾目标完成率 = 试驾量 ÷ (人数要求 × 天数)」。
-// 9.14–9.20 共7天；后续周度天数调整时只需改这一个值。
-const PERIOD_DAYS = 7;
+// 月累（9.1–9.14）按整月口径 30 批/人；后续调整时只需改这一个值。
+const PERIOD_DAYS = 30;
 
-// 排程目标 = 要求人数 × 排程天数。9 为当前变量值（9.14–9.20 窗口，用户指定 排程=人数×9），用户后续若要调整只需改这一处，主表+门店表联动重算。
-const SCHEDULE_DAYS = 9;
+// 排程目标 = 要求人数 × 排程天数。38 为当前变量值（月累口径，用户指定 排程=人数×38），用户后续若要调整只需改这一处，主表+门店表联动重算。
+const SCHEDULE_DAYS = 38;
 
 // ---- 月累锁单完成率数据（净增锁单目标 / 净增锁单）----
 // 数据来源：管理报表，后续更新时用户会提供新截图/Excel
@@ -745,7 +745,7 @@ function renderMainTable() {
     </tr>`;
 
   // 华南下方的说明文字
-  html += `<tr class="note-row"><td colspan="16">1、各店人数（体验工程师+主管）要求为8月版本，本期试驾目标为7批/人，排程目标为9批/人（即工作日1批/人，周末2批/人）</td></tr>`;
+  html += `<tr class="note-row"><td colspan="16">1、各店人数（体验工程师+主管）要求为8月版本，本期试驾目标为30批/人，排程目标为38批/人（即工作日1批/人，周末2批/人）</td></tr>`;
   html += `<tr class="note-row"><td colspan="16">2、门店取数范围为零跑中心+城市展厅，不含卫星店/社区店</td></tr>`;
 
   tbody.innerHTML = html;
