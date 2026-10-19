@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="version" content="20261018-1207">
+<meta name="version" content="20261019-0833">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>试驾勤奋度看板</title>
 <style>
@@ -292,7 +292,7 @@
   <h1>华南试驾勤奋度看板<span class="dash-date" id="dashDate"></span></h1>
 </div>
 <div class="time-row">
-  <span><span class="time-label">时间维度：</span><span class="time-value">月累（10.1–10.17）</span></span>
+  <span><span class="time-label">时间维度：</span><span class="time-value">月累（10.1–10.18）</span></span>
 </div>
 
 <div class="main-table-scroll">
@@ -504,7 +504,7 @@ const SUMMARY_ROW = {
 const MAX_TRIAL_RATE = Math.max(...MANAGER_DATA.map(d => d.testDrive / d.potential * 100));
 
 // 周期天数：用于「试驾目标完成率 = 试驾量 ÷ (人数要求 × 天数)」。
-// 月累（10.1–10.17）按整月口径 31 批/人（10月31天）；后续调整时只需改这一个值。
+// 月累（10.1–10.18）按整月口径 31 批/人（10月31天）；后续调整时只需改这一个值。
 const PERIOD_DAYS = 31;
 
 // 排程目标 = 要求人数 × 排程天数。40 为当前变量值（10月口径：22个工作日×1 + 9个周末日×2），用户后续若要调整只需改这一处，主表+门店表联动重算。
@@ -513,20 +513,20 @@ const SCHEDULE_DAYS = 40;
 // ---- 月累锁单完成率数据（净增锁单目标 / 净增锁单）----
 // 数据来源：管理报表，后续更新时用户会提供新截图/Excel
 const LOCK_ORDER_DATA = {
-  "陈恒惕":     { target: 451,  actual: 264 },
-  "方任昊":     { target: 1178,  actual: 677 },
-  "胡浩":     { target: 706,  actual: 368 },
-  "黄伟峰":     { target: 1469,  actual: 766 },
-  "贾迪赫":     { target: 567,  actual: 269 },
-  "李博恩":     { target: 1323,  actual: 669 },
-  "李传华":     { target: 863,  actual: 505 },
-  "罗捷":     { target: 707,  actual: 350 },
-  "秦启超":     { target: 888,  actual: 425 },
-  "熊俊晖":     { target: 1076,  actual: 593 },
-  "余子恩":     { target: 1794,  actual: 1003 },
+  "陈恒惕":     { target: 451,  actual: 278 },
+  "方任昊":     { target: 1178,  actual: 701 },
+  "胡浩":     { target: 706,  actual: 397 },
+  "黄伟峰":     { target: 1469,  actual: 814 },
+  "贾迪赫":     { target: 567,  actual: 293 },
+  "李博恩":     { target: 1323,  actual: 747 },
+  "李传华":     { target: 863,  actual: 536 },
+  "罗捷":     { target: 707,  actual: 385 },
+  "秦启超":     { target: 888,  actual: 516 },
+  "熊俊晖":     { target: 1076,  actual: 631 },
+  "余子恩":     { target: 1794,  actual: 1060 },
 };
 // 华南总计
-const LOCK_ORDER_SOUTH = { target: 11022, actual: 5889 };
+const LOCK_ORDER_SOUTH = { target: 11022, actual: 6358 };
 
 // 12个零售高级经理中最大的试驾目标完成率（用于单店试驾目标完成率得分的分母）
 // 用未舍入原始率，与上方主表得分口径一致
